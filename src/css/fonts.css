@@ -1,0 +1,71 @@
+@font-face {
+  font-family: "tajawal";
+  src: url("../../public/fonts/tajawal/ArbFONTS-Tajawal-Black.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "tajawal";
+  src: url("../../public/fonts/tajawal/ArbFONTS-Tajawal-Black-1.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "tajawal";
+  src: url("../../public/fonts/tajawal/ArbFONTS-Tajawal-Black-2.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+/* // */
+@font-face {
+  font-family: "lateef";
+  src: url("../../public/fonts/lateef/ArbFONTS-LateefRegOT.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "lateef";
+  src: url("../../public/fonts/lateef/ArbFONTS-Lateef-Regular.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "lateef";
+  src: url("../../public/fonts/lateef/ArbFONTS-Lateef-Regular-OT.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+/*  */
+@font-face {
+  font-family: "droid";
+  src: url("../../public/fonts/droid/ArbFONTS-DroidKufi-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "droid";
+  src: url("../../public/fonts/droid/ArbFONTS-Droid-Arabic-Kufi-Bold.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "droid";
+  src: url("../../public/fonts/droid/ArbFONTS-Droid.Arabic.Kufi_.Bold_DownloadSoftware.iR_.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}

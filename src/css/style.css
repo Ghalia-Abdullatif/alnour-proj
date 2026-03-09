@@ -1,0 +1,293 @@
+@import "tailwindcss";
+
+@import "./fonts.css";
+@theme {
+  --font-droid: "droid", system-ui, sans-serif;
+  --font-tajawal: "tajawal", system-ui, sans-serif;
+  --font-lateef: "lateef", system-ui, sans-serif;
+  --spacing-1: 0.25rem;
+  --spacing-2: 0.5rem;
+  --spacing-3: 0.75rem;
+  --spacing-4: 1rem;
+  --spacing-5: 1.25rem;
+  --spacing-6: 1.5rem;
+  --color-flag-red-50: #c72121;
+
+  --color-golden: #EEB20F;
+
+  --color-gold-hover: #d9c892;
+
+  --color-background: #f7faf5;
+
+  --color-layer: #ebf7e1;
+
+  --color-border: #90988a;
+
+  --color-text-gray: #343832;
+
+  --color-text-black: #191b19;
+
+  --color-green-hover: #85A864;
+
+  --color-green-primary: #193402;
+}
+
+@layer components {
+  /* 1. مكون الكارد (The Card) */
+  .custom-card {
+    background-color: var(--color-white);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-lg);
+    padding: var(--spacing-6);
+    border: 1px solid var(--color-gray-200);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-4);
+  }
+
+  /* 2. مكون الزر (The Button) */
+  .btn-primary {
+        background-color: var(--color-green-primary);
+            color: var(--color-layer);
+
+
+
+  }
+  .btn-secondry{
+            background-color: var(--color-background);
+            color:var(--color-green-primary) ;
+            border:1px solid var(--color-green-primary)
+
+  }
+  button {
+    padding: var(--spacing-3) var(--spacing-6);
+    border-radius: var(--radius-xl);
+    font-weight: var(--font-weight-semibold);
+    font-family: var(--font-droid);
+    text-align: center;
+    transition: all 0.2s;
+
+    &:hover {
+      background-color: var(--color-green-hover);
+      transform: translateY(-1px);
+                  color: var(--color-layer);
+
+    }
+  }
+  @import "tailwindcss";
+
+@import "./fonts.css";
+@theme {
+  --font-droid: "droid", system-ui, sans-serif;
+  --font-tajawal: "tajawal", system-ui, sans-serif;
+  --font-lateef: "lateef", system-ui, sans-serif;
+  --spacing-1: 0.25rem;
+  --spacing-2: 0.5rem;
+  --spacing-3: 0.75rem;
+  --spacing-4: 1rem;
+  --spacing-5: 1.25rem;
+  --spacing-6: 1.5rem;
+  --color-flag-red-50: #c72121;
+
+  --color-golden: #EEB20F;
+
+  --color-gold-hover: #d9c892;
+
+  --color-background: #f7faf5;
+
+  --color-layer: #ebf7e1;
+
+  --color-border: #90988a;
+
+  --color-text-gray: #343832;
+
+  --color-text-black: #191b19;
+
+  --color-green-hover: #85A864;
+
+  --color-green-primary: #193402;
+}
+
+@layer components {
+  /* 1. مكون الكارد (The Card) */
+  .custom-card {
+    background-color: var(--color-white);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-lg);
+    padding: var(--spacing-6);
+    border: 1px solid var(--color-gray-200);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-4);
+  }
+
+  /* 2. مكون الزر (The Button) */
+  .btn-primary {
+        background-color: var(--color-green-primary);
+            color: var(--color-layer);
+
+
+
+  }
+  .btn-secondry{
+            background-color: var(--color-background);
+            color:var(--color-green-primary) ;
+            border:1px solid var(--color-green-primary)
+
+  }
+  button {
+    padding: var(--spacing-3) var(--spacing-6);
+    border-radius: var(--radius-xl);
+    font-weight: var(--font-weight-semibold);
+    font-family: var(--font-droid);
+    text-align: center;
+    transition: all 0.2s;
+
+    &:hover {
+      background-color: var(--color-green-hover);
+      transform: translateY(-1px);
+                  color: var(--color-layer);
+
+    }
+  }
+
+  /* 3. مكون الريديو (The Radio Input) */
+  .custom-radio {
+    appearance: none;
+    width: var(--spacing-5);
+    height: var(--spacing-5);
+    border: 2px solid var(--color-gray-300);
+    border-radius: var(--radius-full);
+    cursor: pointer;
+    transition: border-color 0.2s;
+
+    &:checked {
+      border-color: var(--color-indigo-600);
+      background-color: var(--color-indigo-600);
+      /* نقطة بيضاء في المنتصف */
+      /* background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='8' cy='8' r='3'/%3E%3C/svg%3E"); */
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+  }
+ label {
+  display: block;
+ 
+  font-weight: 700;
+  font-size: 0.875rem; /* text-sm */
+  color: var(--color-gray-700);
+  margin-bottom: var(--spacing-2);
+ 
+}
+ input ,.select{
+  width: 100%;
+  padding: var(--spacing-4);
+  background-color: #ffffff;
+  border: 1px solid var(--color-border);
+  border-radius: 0.75rem; /* rounded-xl */
+  outline: none;
+  font-size: 0.875rem;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
+  &:focus {
+  border-color: var(--color-green-primary);
+  box-shadow: 0 0 0 1px var(--color-green-primary);
+}
+
+}
+.error-text {
+  color: var(--color-flag-red-50);
+  font-size: 0.75rem; /* text-xs */
+   margin-top: 0.50rem;
+  padding-right: 0.50rem;
+  display: block;
+}
+.input-invalid {
+  border-color: var(--color-flag-red-50) !important;
+}
+
+
+  /* Container Styles */
+
+
+/* Header Styles */
+
+
+
+
+.btn-submit:disabled {
+  @apply bg-gray-300 text-gray-500 cursor-not-allowed shadow-none;
+}
+
+.btn-submit:hover:not(:disabled) {
+  background-color: var(--color-green-hover);
+}
+
+.btn-cancel {
+  @apply w-full md:flex-1 py-3 rounded-2xl font-bold border-2 transition-all;
+  border-color: var(--color-green-primary);
+  color: var(--color-green-primary);
+}
+
+.btn-cancel:hover {
+  background-color: var(--color-layer);
+}
+/* ================= Flatpickr ================= */
+
+}
+
+
+  /* 3. مكون الريديو (The Radio Input) */
+  .custom-radio {
+    appearance: none;
+    width: var(--spacing-5);
+    height: var(--spacing-5);
+    border: 2px solid var(--color-gray-300);
+    border-radius: var(--radius-full);
+    cursor: pointer;
+    transition: border-color 0.2s;
+
+    &:checked {
+      border-color: var(--color-indigo-600);
+      background-color: var(--color-indigo-600);
+      /* نقطة بيضاء في المنتصف */
+      /* background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='8' cy='8' r='3'/%3E%3C/svg%3E"); */
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+  }
+
+
+
+
+
+.btn-submit {
+  @apply w-full md:flex-1 py-4 rounded-2xl font-bold transition-all shadow-lg active:scale-95;
+  background-color: var(--color-green-primary);
+  color: var(--color-layer);
+}
+
+.btn-submit:disabled {
+  @apply bg-gray-300 text-gray-500 cursor-not-allowed shadow-none;
+}
+
+.btn-submit:hover:not(:disabled) {
+  background-color: var(--color-green-hover);
+}
+
+.btn-cancel {
+  @apply w-full md:flex-1 py-3 rounded-2xl font-bold border-2 transition-all;
+  border-color: var(--color-green-primary);
+  color: var(--color-green-primary);
+}
+
+.btn-cancel:hover {
+  background-color: var(--color-layer);
+}
+/* ================= Flatpickr ================= */
+
+}
+@media (min-width: 768px) {
+  label {
+    font-size: 1rem; /* md:text-base */
+  }}

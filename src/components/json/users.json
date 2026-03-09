@@ -1,0 +1,39 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "name": "Ahmed Ali",
+      "username": "ahmed1",
+      "password": "123456",
+      "roles": ["teacher"]
+    },
+    {
+      "id": 2,
+      "name": "Sara Mohamed",
+      "username": "sara_sup",
+      "password": "123456",
+      "roles": ["group_supervisor", "teacher"]
+    },
+    {
+      "id": 3,
+      "name": "Omar Hassan",
+      "username": "omar_batch",
+      "password": "123456",
+      "roles": ["batch_supervisor", "student"]
+    },
+    {
+      "id": 4,
+      "name": "Lina Khalid",
+      "username": "lina_student",
+      "password": "123456",
+      "roles": ["student"]
+    },
+    {
+      "id": 5,
+      "name": "Mohamed Adel",
+      "username": "tech_admin",
+      "password": "123456",
+      "roles": ["technical_manager", "admin"]
+    }
+  ]
+}
