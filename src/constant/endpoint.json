@@ -1,0 +1,2136 @@
+{
+    "info": {
+        "_postman_id": "a795e9f9-4de9-423f-8b24-9a5e7e5f0409",
+        "name": "Alnoor API",
+        "description": "Complete API collection for the Alnoor Educational Management System. This collection includes all endpoints for authentication, registration, user management, and academic structure management.",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "variable": [
+        {
+            "key": "baseUrl",
+            "value": "http://127.0.0.1:8000/api",
+            "type": "string"
+        }
+    ],
+    "item": [
+        {
+            "name": "Auth & Session",
+            "item": [
+                {
+                    "name": "Get CSRF Token",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/../csrf/",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "..",
+                                "csrf",
+                                ""
+                            ]
+                        },
+                        "description": "Fetches the CSRF token and sets it in the cookies. This must be called before any POST/PUT/DELETE request."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Login",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "X-CSRFToken",
+                                "value": "{{csrftoken}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"email\": \"admin@example.com\",\n    \"password\": \"your_password\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/accounts/auth/login/",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "accounts",
+                                "auth",
+                                "login",
+                                ""
+                            ]
+                        },
+                        "description": "Authenticates a user via session. Returns `requires_2fa: true` if 2FA is needed (for admin roles)."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Verify 2FA",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "X-CSRFToken",
+                                "value": "{{csrftoken}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"code\": \"123456\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/accounts/auth/login/verify-2fa/",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "accounts",
+                                "auth",
+                                "login",
+                                "verify-2fa",
+                                ""
+                            ]
+                        },
+                        "description": "Verifies the 6-digit 2FA code sent to the admin's email after initial login."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Logout",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "X-CSRFToken",
+                                "value": "{{csrftoken}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/accounts/auth/logout/",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "accounts",
+                                "auth",
+                                "logout",
+                                ""
+                            ]
+                        },
+                        "description": "Logs out the current user and invalidates the session."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Current User (Me)",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/accounts/me/",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "accounts",
+                                "me",
+                                ""
+                            ]
+                        },
+                        "description": "Returns detailed information about the authenticated user, including roles, preferred role, and user types."
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Password Management",
+            "item": [
+                {
+                    "name": "Request Password Reset",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "X-CSRFToken",
+                                "value": "{{csrftoken}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"email\": \"user@example.com\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/accounts/password-reset/request/",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "accounts",
+                                "password-reset",
+                                "request",
+                                ""
+                            ]
+                        },
+                        "description": "Sends a UUID token to the user's email for password reset. Token expires in 10 minutes."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Confirm Password Reset",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "X-CSRFToken",
+                                "value": "{{csrftoken}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"token\": \"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\",\n    \"new_password\": \"NewSecurePassword123\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/accounts/password-reset/confirm/",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "accounts",
+                                "password-reset",
+                                "confirm",
+                                ""
+                            ]
+                        },
+                        "description": "Resets the password using the token from the email."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Change Password (Authenticated)",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "X-CSRFToken",
+                                "value": "{{csrftoken}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"old_password\": \"your_old_password\",\n    \"new_password\": \"YourNewSecure123\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/accounts/password/change/",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "accounts",
+                                "password",
+                                "change",
+                                ""
+                            ]
+                        },
+                        "description": "Allows an authenticated user to change their password."
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Email Management",
+            "item": [
+                {
+                    "name": "Request Email Change",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "X-CSRFToken",
+                                "value": "{{csrftoken}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"new_email\": \"newemail@example.com\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/accounts/email/change/request/",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "accounts",
+                                "email",
+                                "change",
+                                "request",
+                                ""
+                            ]
+                        },
+                        "description": "Sends a verification code to the new email address. The code expires in 5 minutes."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Confirm Email Change",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "X-CSRFToken",
+                                "value": "{{csrftoken}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"code\": \"123456\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/accounts/email/change/confirm/",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "accounts",
+                                "email",
+                                "change",
+                                "confirm",
+                                ""
+                            ]
+                        },
+                        "description": "Confirms the email change using the verification code."
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Account Admin (Admin Only)",
+            "item": [
+                {
+                    "name": "Create Account",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "X-CSRFToken",
+                                "value": "{{csrftoken}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"email\": \"newuser@example.com\",\n    \"role_codes\": [\"teacher\"],\n    \"preferred_role\": \"teacher\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/accounts/register/",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "accounts",
+                                "register",
+                                ""
+                            ]
+                        },
+                        "description": "Creates a new Account with specified roles. An email with credentials is sent to the user."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Activate Account for Person",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "X-CSRFToken",
+                                "value": "{{csrftoken}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"person_id\": 1,\n    \"role_codes\": [\"student\"],\n    \"preferred_role\": \"student\",\n    \"force_reset_password\": true\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/accounts/activate/",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "accounts",
+                                "activate",
+                                ""
+                            ]
+                        },
+                        "description": "Activates an Account for an existing Person. Creates a User record and links it to the Person."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "List Accounts",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/accounts/accounts/",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "accounts",
+                                "accounts",
+                                ""
+                            ]
+                        },
+                        "description": "Lists all accounts (Admin only)."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Account by ID",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/accounts/accounts/:id/",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "accounts",
+                                "accounts",
+                                ":id",
+                                ""
+                            ],
+                            "variable": [
+                                {
+                                    "key": "id",
+                                    "value": "1"
+                                }
+                            ]
+                        },
+                        "description": "Retrieves a specific account by its ID."
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Roles (Admin Only)",
+            "item": [
+                {
+                    "name": "List Roles",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/accounts/roles/",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "accounts",
+                                "roles",
+                                ""
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Create Role",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "X-CSRFToken",
+                                "value": "{{csrftoken}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"code\": \"new_role\",\n    \"name\": \"New Role Name\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/accounts/roles/",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "accounts",
+                                "roles",
+                                ""
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Role by ID",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/accounts/roles/:id/",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "accounts",
+                                "roles",
+                                ":id",
+                                ""
+                            ],
+                            "variable": [
+                                {
+                                    "key": "id",
+                                    "value": "1"
+                                }
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Update Role",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "X-CSRFToken",
+                                "value": "{{csrftoken}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"code\": \"updated_role\",\n    \"name\": \"Updated Role Name\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/accounts/roles/:id/",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "accounts",
+                                "roles",
+                                ":id",
+                                ""
+                            ],
+                            "variable": [
+                                {
+                                    "key": "id",
+                                    "value": "1"
+                                }
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Delete Role",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "X-CSRFToken",
+                                "value": "{{csrftoken}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/accounts/roles/:id/",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "accounts",
+                                "roles",
+                                ":id",
+                                ""
+                            ],
+                            "variable": [
+                                {
+                                    "key": "id",
+                                    "value": "1"
+                                }
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Account Roles (Admin Only)",
+            "item": [
+                {
+                    "name": "List Account Roles",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/accounts/account-roles/",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "accounts",
+                                "account-roles",
+                                ""
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Assign Role to Account",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "X-CSRFToken",
+                                "value": "{{csrftoken}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"account\": 1,\n    \"role\": 2\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/accounts/account-roles/",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "accounts",
+                                "account-roles",
+                                ""
+                            ]
+                        },
+                        "description": "Assigns a role to an account."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Delete Account Role",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "X-CSRFToken",
+                                "value": "{{csrftoken}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/accounts/account-roles/:id/",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "accounts",
+                                "account-roles",
+                                ":id",
+                                ""
+                            ],
+                            "variable": [
+                                {
+                                    "key": "id",
+                                    "value": "1"
+                                }
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Preferred Role",
+            "item": [
+                {
+                    "name": "Get My Preferred Role",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/accounts/preferred-roles/",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "accounts",
+                                "preferred-roles",
+                                ""
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Set/Update Preferred Role",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "X-CSRFToken",
+                                "value": "{{csrftoken}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"role\": 1\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/accounts/preferred-roles/",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "accounts",
+                                "preferred-roles",
+                                ""
+                            ]
+                        },
+                        "description": "Sets the current user's preferred role (role ID)."
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Registration",
+            "item": [
+                {
+                    "name": "Submit Registration (Public - New Person)",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "X-CSRFToken",
+                                "value": "{{csrftoken}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"program_name\": \"Intensive Memorization\",\n    \"person\": {\n        \"country\": 1,\n        \"first_name\": \"سارة\",\n        \"second_name\": \"محمد\",\n        \"third_name\": \"علي\",\n        \"fourth_name\": \"أحمد\",\n        \"birth_date\": \"2000-05-15\",\n        \"telegram_id\": \"@sara_example\",\n        \"phone_number\": \"+966501234567\",\n        \"email\": \"sara@example.com\"\n    }\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/registration/submit/",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "registration",
+                                "submit",
+                                ""
+                            ]
+                        },
+                        "description": "Submits a new registration request. For new users, the `person` object is required."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Submit Registration (Public - Existing Person by Identifier)",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "X-CSRFToken",
+                                "value": "{{csrftoken}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"program_name\": \"Intensive Memorization\",\n    \"identifier\": \"sara@example.com\",\n    \"birth_date\": \"2000-05-15\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/registration/submit/",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "registration",
+                                "submit",
+                                ""
+                            ]
+                        },
+                        "description": "Submits a registration for an existing person using their email/phone/telegram_id and birth_date."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Track Registration (Public)",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/registration/track/:tracking_code/",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "registration",
+                                "track",
+                                ":tracking_code",
+                                ""
+                            ],
+                            "variable": [
+                                {
+                                    "key": "tracking_code",
+                                    "value": "ABC123"
+                                }
+                            ]
+                        },
+                        "description": "Tracks the status of a registration request using the tracking code."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "List Registration Requests (Admin/Reviewer)",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/registration/requests/",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "registration",
+                                "requests",
+                                ""
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Registration Request by ID",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/registration/requests/:id/",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "registration",
+                                "requests",
+                                ":id",
+                                ""
+                            ],
+                            "variable": [
+                                {
+                                    "key": "id",
+                                    "value": "1"
+                                }
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Approve Registration",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "X-CSRFToken",
+                                "value": "{{csrftoken}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/registration/:id/approve/",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "registration",
+                                ":id",
+                                "approve",
+                                ""
+                            ],
+                            "variable": [
+                                {
+                                    "key": "id",
+                                    "value": "1"
+                                }
+                            ]
+                        },
+                        "description": "Approves a pending registration. This action creates an Account, User, and Student for the applicant."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Reject Registration",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "X-CSRFToken",
+                                "value": "{{csrftoken}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/registration/:id/reject/",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "registration",
+                                ":id",
+                                "reject",
+                                ""
+                            ],
+                            "variable": [
+                                {
+                                    "key": "id",
+                                    "value": "1"
+                                }
+                            ]
+                        },
+                        "description": "Rejects a pending registration request."
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Registration Settings (Admin Only)",
+            "item": [
+                {
+                    "name": "List All Settings",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/registration/settings/",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "registration",
+                                "settings",
+                                ""
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Create Registration Settings",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "X-CSRFToken",
+                                "value": "{{csrftoken}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"program\": 1,\n    \"is_open\": true,\n    \"max_accepted_students\": 50\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/registration/settings/",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "registration",
+                                "settings",
+                                ""
+                            ]
+                        },
+                        "description": "Creates registration settings for a program."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Update Registration Settings",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "X-CSRFToken",
+                                "value": "{{csrftoken}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"program\": 1,\n    \"is_open\": false,\n    \"max_accepted_students\": 100\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/registration/settings/:id/",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "registration",
+                                "settings",
+                                ":id",
+                                ""
+                            ],
+                            "variable": [
+                                {
+                                    "key": "id",
+                                    "value": "1"
+                                }
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Delete Registration Settings",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "X-CSRFToken",
+                                "value": "{{csrftoken}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/registration/settings/:id/",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "registration",
+                                "settings",
+                                ":id",
+                                ""
+                            ],
+                            "variable": [
+                                {
+                                    "key": "id",
+                                    "value": "1"
+                                }
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Programs",
+            "item": [
+                {
+                    "name": "List Public Programs",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/programs/public/",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "programs",
+                                "public",
+                                ""
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Public Program by ID",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/programs/public/:id/",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "programs",
+                                "public",
+                                ":id",
+                                ""
+                            ],
+                            "variable": [
+                                {
+                                    "key": "id",
+                                    "value": "1"
+                                }
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Batches",
+            "item": [
+                {
+                    "name": "List Batches",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/batches/",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "batches",
+                                ""
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Create Batch",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "X-CSRFToken",
+                                "value": "{{csrftoken}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"program\": 1,\n    \"batch_supervisor\": 1,\n    \"status\": 1,\n    \"current_level\": \"Level 1\",\n    \"num_group\": 4,\n    \"start_date\": \"2026-02-01\",\n    \"end_date\": \"2026-06-30\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/batches/",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "batches",
+                                ""
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Batch by ID",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/batches/:id/",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "batches",
+                                ":id",
+                                ""
+                            ],
+                            "variable": [
+                                {
+                                    "key": "id",
+                                    "value": "1"
+                                }
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Update Batch",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "X-CSRFToken",
+                                "value": "{{csrftoken}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"program\": 1,\n    \"batch_supervisor\": 1,\n    \"status\": 2,\n    \"current_level\": \"Level 2\",\n    \"num_group\": 4,\n    \"start_date\": \"2026-02-01\",\n    \"end_date\": \"2026-09-30\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/batches/:id/",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "batches",
+                                ":id",
+                                ""
+                            ],
+                            "variable": [
+                                {
+                                    "key": "id",
+                                    "value": "1"
+                                }
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Delete Batch",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "X-CSRFToken",
+                                "value": "{{csrftoken}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/batches/:id/",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "batches",
+                                ":id",
+                                ""
+                            ],
+                            "variable": [
+                                {
+                                    "key": "id",
+                                    "value": "1"
+                                }
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "List Batch Statuses",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/batches/batch-statuses/",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "batches",
+                                "batch-statuses",
+                                ""
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Groups",
+            "item": [
+                {
+                    "name": "List Groups",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/groups/",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "groups",
+                                ""
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Create Group",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "X-CSRFToken",
+                                "value": "{{csrftoken}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"batch\": 1,\n    \"group_supervisor\": 1,\n    \"teacher\": 1,\n    \"name\": \"Group A\",\n    \"capacity\": 25\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/groups/",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "groups",
+                                ""
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Group by ID",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/groups/:id/",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "groups",
+                                ":id",
+                                ""
+                            ],
+                            "variable": [
+                                {
+                                    "key": "id",
+                                    "value": "1"
+                                }
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Update Group",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "X-CSRFToken",
+                                "value": "{{csrftoken}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"batch\": 1,\n    \"group_supervisor\": 1,\n    \"teacher\": 2,\n    \"name\": \"Group A - Updated\",\n    \"capacity\": 30\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/groups/:id/",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "groups",
+                                ":id",
+                                ""
+                            ],
+                            "variable": [
+                                {
+                                    "key": "id",
+                                    "value": "1"
+                                }
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Delete Group",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "X-CSRFToken",
+                                "value": "{{csrftoken}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/groups/:id/",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "groups",
+                                ":id",
+                                ""
+                            ],
+                            "variable": [
+                                {
+                                    "key": "id",
+                                    "value": "1"
+                                }
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "List Group Students",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/groups/group-students/",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "groups",
+                                "group-students",
+                                ""
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Add Student to Group",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "X-CSRFToken",
+                                "value": "{{csrftoken}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"group\": 1,\n    \"student\": 5\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/groups/group-students/",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "groups",
+                                "group-students",
+                                ""
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Remove Student from Group",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "X-CSRFToken",
+                                "value": "{{csrftoken}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/groups/group-students/:id/",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "groups",
+                                "group-students",
+                                ":id",
+                                ""
+                            ],
+                            "variable": [
+                                {
+                                    "key": "id",
+                                    "value": "1"
+                                }
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Notifications",
+            "item": [
+                {
+                    "name": "List Notifications",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/notifications/",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "notifications",
+                                ""
+                            ]
+                        },
+                        "description": "Lists notifications visible to the current user. Admins see all; other users see broadcast or role-targeted notifications."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Notification by ID",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/notifications/:id/",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "notifications",
+                                ":id",
+                                ""
+                            ],
+                            "variable": [
+                                {
+                                    "key": "id",
+                                    "value": "1"
+                                }
+                            ]
+                        },
+                        "description": "Retrieves a specific notification by ID."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Create Notification (Broadcast)",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "X-CSRFToken",
+                                "value": "{{csrftoken}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"title\": \"عطلة رسمية\",\n    \"message\": \"سيتم إغلاق المقرأة يوم الخميس القادم بمناسبة العيد.\",\n    \"is_broadcast\": true\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/notifications/",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "notifications",
+                                ""
+                            ]
+                        },
+                        "description": "Creates a broadcast notification visible to ALL authenticated users. Admin only."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Create Notification (Role-Targeted by Codes)",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "X-CSRFToken",
+                                "value": "{{csrftoken}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"title\": \"اختبار مراجعة للطالبات\",\n    \"message\": \"سيتم إجراء اختبار مراجعة يوم الأحد القادم في الساعة 10 صباحاً.\",\n    \"is_broadcast\": false,\n    \"role_codes\": [\"student\"]\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/notifications/",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "notifications",
+                                ""
+                            ]
+                        },
+                        "description": "Creates a notification targeted to specific roles using role codes (e.g., 'student', 'teacher'). Admin only."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Create Notification (Role-Targeted by IDs)",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "X-CSRFToken",
+                                "value": "{{csrftoken}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"title\": \"اجتماع المعلمات\",\n    \"message\": \"تذكير بالاجتماع الأسبوعي للمعلمات يوم الثلاثاء.\",\n    \"is_broadcast\": false,\n    \"roles\": [2, 3]\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/notifications/",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "notifications",
+                                ""
+                            ]
+                        },
+                        "description": "Creates a notification targeted to specific roles using role IDs. Admin only."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Update Notification",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "X-CSRFToken",
+                                "value": "{{csrftoken}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"title\": \"عطلة رسمية - تحديث\",\n    \"message\": \"تم تأجيل العطلة إلى يوم الجمعة.\",\n    \"is_broadcast\": true\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/notifications/:id/",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "notifications",
+                                ":id",
+                                ""
+                            ],
+                            "variable": [
+                                {
+                                    "key": "id",
+                                    "value": "1"
+                                }
+                            ]
+                        },
+                        "description": "Updates an existing notification. Admin only."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Partial Update Notification",
+                    "request": {
+                        "method": "PATCH",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "X-CSRFToken",
+                                "value": "{{csrftoken}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"message\": \"تم تحديث محتوى الإشعار فقط.\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/notifications/:id/",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "notifications",
+                                ":id",
+                                ""
+                            ],
+                            "variable": [
+                                {
+                                    "key": "id",
+                                    "value": "1"
+                                }
+                            ]
+                        },
+                        "description": "Partially updates a notification (e.g., only the message). Admin only."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Delete Notification",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "X-CSRFToken",
+                                "value": "{{csrftoken}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/notifications/:id/",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "notifications",
+                                ":id",
+                                ""
+                            ],
+                            "variable": [
+                                {
+                                    "key": "id",
+                                    "value": "1"
+                                }
+                            ]
+                        },
+                        "description": "Deletes a notification. Admin only."
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "People",
+            "item": [
+                {
+                    "name": "List Persons",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/people/Person/",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "people",
+                                "Person",
+                                ""
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Create Person",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "X-CSRFToken",
+                                "value": "{{csrftoken}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"country\": 1,\n    \"first_name\": \"أحمد\",\n    \"second_name\": \"محمد\",\n    \"third_name\": \"سعيد\",\n    \"fourth_name\": \"علي\",\n    \"birth_date\": \"1995-08-20\",\n    \"telegram_id\": \"@ahmed_example\",\n    \"phone_number\": \"+966551234567\",\n    \"email\": \"ahmed@example.com\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/people/Person/",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "people",
+                                "Person",
+                                ""
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Person by ID",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/people/Person/:id/",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "people",
+                                "Person",
+                                ":id",
+                                ""
+                            ],
+                            "variable": [
+                                {
+                                    "key": "id",
+                                    "value": "1"
+                                }
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Update Person",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "X-CSRFToken",
+                                "value": "{{csrftoken}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"country\": 1,\n    \"first_name\": \"أحمد\",\n    \"second_name\": \"محمد\",\n    \"third_name\": \"سعيد\",\n    \"fourth_name\": \"الأنصاري\",\n    \"birth_date\": \"1995-08-20\",\n    \"telegram_id\": \"@ahmed_updated\",\n    \"phone_number\": \"+966551234567\",\n    \"email\": \"ahmed@example.com\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/people/Person/:id/",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "people",
+                                "Person",
+                                ":id",
+                                ""
+                            ],
+                            "variable": [
+                                {
+                                    "key": "id",
+                                    "value": "1"
+                                }
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Delete Person",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "X-CSRFToken",
+                                "value": "{{csrftoken}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/people/Person/:id/",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "people",
+                                "Person",
+                                ":id",
+                                ""
+                            ],
+                            "variable": [
+                                {
+                                    "key": "id",
+                                    "value": "1"
+                                }
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "List Countries",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/people/countries/",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "people",
+                                "countries",
+                                ""
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Create Country",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "X-CSRFToken",
+                                "value": "{{csrftoken}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"name\": \"Saudi Arabia\",\n    \"code\": \"SA\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/people/countries/",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "people",
+                                "countries",
+                                ""
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Users",
+            "item": [
+                {
+                    "name": "List All Users",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/users/all/",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "users",
+                                "all",
+                                ""
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "List General Admins",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/users/general-admins/",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "users",
+                                "general-admins",
+                                ""
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "List Batch Supervisors",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/users/batch-supervisors/",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "users",
+                                "batch-supervisors",
+                                ""
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "List Group Supervisors",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/users/group-supervisors/",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "users",
+                                "group-supervisors",
+                                ""
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "List Teachers",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/users/teachers/",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "users",
+                                "teachers",
+                                ""
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "List Students",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/users/students/",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "users",
+                                "students",
+                                ""
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get User by ID (Any Type)",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/users/all/:id/",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "users",
+                                "all",
+                                ":id",
+                                ""
+                            ],
+                            "variable": [
+                                {
+                                    "key": "id",
+                                    "value": "1"
+                                }
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+            ]
+        }
+    ]
+}

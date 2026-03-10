@@ -59,7 +59,6 @@ export function useValidation() {
     }
    if (field.hasAttribute('telegram')&& !(field.value === '')) {
       // نزيل @ إذا وجدت للتحقق من النص
-      console.log ("hhh")
       // const cleanValue = field.value.startsWith('@') ?field.value.slice(1) : field.value
       
       // النمط: يبدأ بحرف إنجليزي [a-zA-Z] ثم يتبعه حروف أو أرقام أو _ [a-zA-Z0-9_]

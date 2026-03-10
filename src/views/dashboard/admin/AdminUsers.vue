@@ -1,5 +1,15 @@
 <script setup>
-import { ref, computed } from 'vue'
+
+import { ref, computed, onMounted } from "vue";
+import { useUserStore } from "../../../stors/users-store";
+
+const userStore = useUserStore();
+
+ onMounted(async() => {
+  userStore.getUsers();
+  await console.log(userStore.users )
+
+});
 
 // 1. البيانات (Data)
 const users = ref([

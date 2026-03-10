@@ -6,19 +6,14 @@ import SelectItem from "../../components/global/SelectItem.vue";
 import PhoneNumber from "../../components/global/PhoneNumber.vue";
 import LableItem from "../../components/global/LableItem.vue";
 import FieldContainer from "../../components/global/FieldContainer.vue";
+import conteris from '../../components/json/counterys.json'
 
 const formRef = ref(null);
 const phoneRef = ref();
 const { errors, validateField, validateForm } = useValidation();
 
 /* ================= الدول ================= */
-const countries = [
-  { id: 1, name: "السودان", code: "+249", flag: "🇸🇩" },
-  { id: 2, name: "السعودية", code: "+966", flag: "🇸🇦" },
-  { id: 3, name: "مصر", code: "+20", flag: "🇪🇬" },
-  { id: 4, name: "الإمارات", code: "+971", flag: "🇦🇪" },
-  { id: 5, name: "قطر", code: "+974", flag: "🇶🇦" },
-];
+const countries =ref(conteris);
 
 /* ================= الولايات ================= */
 const sudanStates = [
@@ -173,8 +168,8 @@ const handleSubmit = () => {
               ariaLabel="اختر بلد الاقامة"
               :options="countries"
               v-model:selected="formData.country"
-              labelKey="name"
-              valueKey="name"
+              labelKey="value"
+              valueKey="value"
               name="country"
               :required="true"
               :localError="errors.country ? true : false"
