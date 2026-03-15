@@ -3,7 +3,7 @@
     
     <!-- Label -->
  
-    <LableItem :forId="forId" :label="label" :required="required" ></LableItem>
+    <LableItem :forId="forId" :label="label" :required="required" :hideLabel="hideLabel" ></LableItem>
      
 
     <!-- Input Slot -->
@@ -12,7 +12,7 @@
     <!-- Error Message -->
     <transition name="fade">
      <p v-if="errors && errors[name]" class="error-text">
-  {{ errors[name] }}
+  {{ errors[name] }} !
 </p>
     </transition>
 
@@ -27,6 +27,10 @@ const props = defineProps({
   required: { type: Boolean, default: false },//لتحديد الحقل مطلوب او لا لاضافة النجمه
   forId: { type: String, default: "" },//معرف الحقل لربطه مع العنوان
   name: { type: String, default: "" },//اسم الحقل
-  fieldContainerStyle:{ type: String, default: "" }//لتحديد استايل معين
+  fieldContainerStyle:{ type: String, default: "" },//لتحديد استايل معين
+  hideLabel: { 
+    type: Boolean, 
+    default: false 
+  }
 })
 </script>

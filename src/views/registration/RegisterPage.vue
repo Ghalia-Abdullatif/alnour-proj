@@ -6,14 +6,23 @@ import SelectItem from "../../components/global/SelectItem.vue";
 import PhoneNumber from "../../components/global/PhoneNumber.vue";
 import LableItem from "../../components/global/LableItem.vue";
 import FieldContainer from "../../components/global/FieldContainer.vue";
-import conteris from '../../components/json/counterys.json'
+// import conteris from '../../components/json/counterys.json'
+import RegesterSucces from'./RegesterSucces.vue'
+import AddPerson from "./AddPerson.vue";
+import PasswordField from'../../components/global/PasswordField.vue'
 
 const formRef = ref(null);
 const phoneRef = ref();
+const programs= ref([
+  {id:1, name:"معارج"},
+    {id:2, name:"مثاني"}
+
+])
+
 const { errors, validateField, validateForm } = useValidation();
 
 /* ================= الدول ================= */
-const countries =ref(conteris);
+// const countries =ref(conteris);
 
 /* ================= الولايات ================= */
 const sudanStates = [
@@ -36,6 +45,7 @@ const sudanStates = [
   { id: 17, name: "شرق دارفور" },
   { id: 18, name: "جنوب دارفور" },
 ];
+const showSuccess= ref (false);
 
 /* ================= الفورم ================= */
 const formData = reactive({
@@ -65,223 +75,66 @@ const isFormValid = computed(() => {
 });
 
 const handleSubmit = () => {
+  showSuccess.value = true;
+  for (data in personData){
+      console.log(`${data}  استلام طلبك بنح! ✅`);
+
+  }
   console.log(`${!phoneRef.value.validate()}`);
 
-  if (!validateForm(formRef.value) || !phoneRef.value.validate()) return;
   formData.forEach(il=>console.log(il))
   alert(`'تم استلام طلبك بنح! ✅ `);
 };
 </script>
-
 <template>
   <div
-    class="min-h-screen bg-gray-100 flex justify-center items-start py-6 px-3 md:py-10 md:px-4 font-['Tajawal']"
+    class="min-h-screen  flex justify-center items-start py-6 px-3 md:py-10 md:px-4 font-['Tajawal']"
     dir="rtl"
   >
-    <div
-      class="bg-[#faf9f6] w-full max-w-3xl rounded-[24px] md:rounded-[32px] p-5 md:p-10 shadow-2xl border border-gray-200"
-    >
-      <div class="text-center mb-6 md:mb-8">
-        <h2 class="text-[#064e3b] text-xl md:text-3xl font-extrabold">
-          إنشاء حساب جديد
+
+
+  <add-person puttonLabel="ارسال" @supmit="(e)=>console.log(e)">
+    <template #top>
+        <PasswordField/>
+
+    <div class="text-center flex flex-col items-center gap-2  mb-6 md:mb-8">
+        <h2 class="text-green-primary text-sm  md:text-3xl font-extrabold">
+          طلب التسجيل بمقرأة النور الإلكترونيه
         </h2>
         <div class="w-12 h-1 bg-[#d97706] mx-auto mt-2 rounded-full"></div>
-      </div>
-
-      <form
-        ref="formRef"
-        @submit.prevent="handleSubmit"
-        class="space-y-5 md:space-y-6"
-      >
-        <!-- الأسماء -->
-        <div class="space-y-2 text-right">
-          <LableItem
-            label=" الإسم (باللغة العربية) :"
-            :required="true"
-          ></LableItem>
-
-          <div class="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-3">
-            <div
-              v-for="(field, i) in [
-                { name: 'firstName', placeholder: 'الإسم الأول' },
-                { name: 'secondName', placeholder: 'الإسم الثاني' },
-                { name: 'thirdName', placeholder: 'الإسم الثالث' },
-                { name: 'fourthName', placeholder: 'الإسم الرابع' },
-              ]"
-              :key="i"
-            >
-              <FieldContainer :errors="errors" :name="field.name">
-                <input
-                  :name="field.name"
-                  :id="field.name"
-                  required
-                  arabic
-                  v-model="formData[field.name]"
-                  @input="validateField($event.target)"
-                  @blur="validateField($event.target)"
-                  :placeholder="field.placeholder"
-                  class="select"
-                  :class="errors[field.name] ? 'input-invalid' : ''"
-              /></FieldContainer>
-            </div>
-          </div>
-        </div>
-
-        <!-- تاريخ الميلاد -->
-        <div class="grid gap-5 md:gap-6 grid-cols-1 md:grid-cols-2">
+        <div class="w-24">
+      اختاري البرنامج
+           <!-- الدولة -->
           <FieldContainer
             :errors="errors"
-            :required="true"
-            name="birthDate"
-            label="تاريخ الميلاد :"
-            fieldContainerStyle="space-y-2 text-right"
-          >
-            <DatePicker
-              name="birthDate"
-              v-model="formData.birthDate"
-              placeholder="اختر تاريخ الميلاد"
-              :required="true"
-              :min-age="12"
-              :max-age="20"
-              :localerror="!!errors.birthDate"
-              @error="
-                (e) => {
-                  if (e.message) {
-                    errors[e.name] = e.message;
-                  } else {
-                    delete errors[e.name];
-                  }
-                }
-              "
-            />
-          </FieldContainer>
-
-          <!-- الدولة -->
-          <FieldContainer
-            :errors="errors"
-            :required="true"
-            name="country"
-            label="الدولة (بلد الإقامة):"
-            fieldContainerStyle="space-y-2 text-right"
+            name="program"
           >
             <SelectItem
               ariaLabel="اختر بلد الاقامة"
-              :options="countries"
+              customClass="rounded-full bg-black"
+              :options="programs"
               v-model:selected="formData.country"
-              labelKey="value"
-              valueKey="value"
-              name="country"
+              labelKey="name"
+              valueKey="name"
+              name="program"
               :required="true"
-              :localError="errors.country ? true : false"
+              :localError="errors.program ? true : false"
               placeholder="اختر الدولة"
               @error="(e) => (errors[e.name] = e.message)"
             />
           </FieldContainer>
-        </div>
-        <!-- الولاية -->
-        <transition name="fade">
-          <FieldContainer
-            v-if="formData.country.name === 'السودان'"
-            :errors="errors"
-            :required="true"
-            name="state"
-            label="الولاية :"
-            fieldContainerStyle="space-y-2 text-right"
-          >
-            <SelectItem
-              ariaLabel="اختر الولاية"
-              :options="sudanStates"
-              v-model:selected="formData.state"
-              labelKey="name"
-              valueKey="name"
-              name="state"
-              :required="true"
-              :localError="errors.state ? true : false"
-              placeholder="اختر الولاية"
-              @error="(e) => (errors[e.name] = e.message)"
-            />
-          </FieldContainer>
-        </transition>
-
-        <!-- باقي الحقول (البريد والهاتف والتلجرام) -->
-        <FieldContainer
-          :errors="errors"
-          :required="true"
-          name="email"
-          label="البريد الإلكتروني :"
-          fieldContainerStyle="space-y-2 text-right"
-        >
-          <input
-            name="email"
-            type="email"
-            required
-            v-model="formData.email"
-            placeholder="أدخل البريد الإلكتروني"
-            @input="validateField($event.target)"
-            @blur="validateField($event.target)"
-            class="text-center"
-            :class="errors.email ? 'input-invalid' : ''"
-            dir="ltr"
-          />
-                  <!-- الهاتف والتلجرام -->
-
-        </FieldContainer>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6">
-          <div class="space-y-2 text-right">
-            <LableItem label=" رقم الهاتف :" :required="true"></LableItem>
-
-            <div class="flex items-center">
-              <PhoneNumber
-                ref="phoneRef"
-                v-model:selected="formData.phoneKey"
-                :required="true"
-                v-model:phone="formData.phone"
-              ></PhoneNumber>
+        
             </div>
-          </div>
-
-          <FieldContainer
-            :errors="errors"
-            :required="true"
-            forId="telegram"
-            name="telegram"
-            label="معرف التلجرام :"
-            fieldContainerStyle="space-y-2 text-right"
-          >
-            <input
-            id="telegram"
-              name="telegram"
-              required
-              v-model="formData.telegram"
-              telegram
-              @input="validateField($event.target)"
-              @blur="validateField($event.target)"
-              :class="errors.telegram ? 'input-invalid' : ''"
-              placeholder="أدخل معرف التلجرام"
-            />
-          </FieldContainer>
-        </div>
-
-        <!-- الأزرار -->
-        <div class="flex flex-col md:flex-row gap-4 pt-4">
-          <button
-            type="button"
-            @click="handleSubmit"
-            class="w-full md:flex-1 py-4 rounded-2xl font-bold transition-all shadow-lg active:scale-95 bg-[#064e3b] text-white hover:bg-[#042f24]"
-          >
-            إرسال الطلب
-          </button>
-
-          <button
-            type="button"
-            class="w-full md:flex-1 border-2 border-[#064e3b] text-[#064e3b] py-3 rounded-2xl font-bold hover:bg-emerald-50 transition-all"
-          >
-            إلغاء
-          </button>
-        </div>
-      </form>
-    </div>
+      </div>
+    </template>
+  </add-person>
   </div>
+
+  <RegesterSucces 
+      :is-open="showSuccess" 
+      registration-code="MQ-9920"
+      @close="showSuccess = false" 
+    />
 </template>
 
 <style scoped>

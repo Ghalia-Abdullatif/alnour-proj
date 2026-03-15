@@ -6,4 +6,11 @@ export const  endpoint={
     getUsers: {
       url: `${baseurl}/people/Person/`,
       method: "GET"
-    },}}
+    },},
+    programs: {
+    regester: {
+      url: `../components/json/programs.json`,
+      method: "GET"
+    },}
+  
+  }

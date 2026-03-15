@@ -1,0 +1,34 @@
+[
+    {
+        "id": 1,
+        "image": "src/assets/ogos/maarej.png",
+        "name": "مثاني",
+        "discrip": "عامين",
+        "stody": "وجهين",
+        "days": "ثلاث"
+    },
+    {
+        "id": 2,
+        "image": "src/assets/ogos/maarej.png",
+        "name": "معارج",
+        "discrip": "اربعة",
+        "stody": "وجه",
+        "days": "اربعة"
+    },
+    {
+        "id": 3,
+        "image": "src/assets/ogos/mthani.png",
+        "name": "مدارج",
+        "discrip": "عامين",
+        "stody": "وجهين",
+        "days": "ثلاث"
+    },
+    {
+        "id": 4,
+        "image": "src/assets/ogos/mthani.png",
+        "name": "مراقي",
+        "discrip": "عامين",
+        "stody": "وجهين",
+        "days": "ثلاث"
+    }
+]

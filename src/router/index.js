@@ -1,4 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
+//صفحات تسجيل الدخول 
+import AuthLayout from'../views/auth/AuthLayout.vue'
+import LoginPage from "../views/auth/LoginPage.vue";
 
 // المكونات الرئيسية
 import Dashboard from '../views/dashboard/DashBoard.vue'
@@ -6,11 +9,34 @@ import AdminLayout from '../views/dashboard/admin/AdminHome.vue'
 import AdminRegistration from '../views/dashboard/admin/AdminRegistration.vue'
 
 // صفحات عامة
+import selectProgram from '../views/registration/SelectProgram.vue'
 import RegisterPage from '../views/registration/RegisterPage.vue'
+
 import groups from '../views/dashboard/supervisor/ViewGroups.vue'
 import NotFound from '../views/NotFound.vue'
 
 const routes = [
+  //2 تسجيل الدخول واعادة كلمة المرور واختيار دور الجلسة والتحقق المزدوج للادمن
+  {
+    // المسار الرئيسي لعمليات المصادقة
+    path: '/auth',
+    component: AuthLayout,
+    // 'redirect' تضمن توجه المستخدم لصفحة الدخول تلقائياً عند زيارة /auth
+    redirect: '/auth/login',
+    
+    // المسارات الأبناء (الأطفال) التي ستظهر داخل <router-view> الخاص بـ AuthLayout
+    children: [
+      {
+        // مسار تسجيل الدخول الأساسي
+        path: 'login',
+        name: 'Login',
+        component: LoginPage,
+        meta: { title: 'تسجيل الدخول - مقرأة النور' }
+      },
+  
+    ]
+  },
+  
   {
     path: '/',
     redirect: '/Dashboard'
@@ -96,7 +122,38 @@ const routes = [
         name: 'StudentDashboard',
         component: () => import('../views/dashboard/student/StudentDashboardView.vue'),
         meta: { roles: ['student'] }
-      }
+      },
+    {
+  path: 'supervisor',
+  // component: () => import('../views/dashboard/supervisor/SupervisorLayout.vue'),
+  meta: { roles: ['admin', 'supervisor'] },
+  children: [
+    // 1. عرض المساقات
+    {
+      path: 'courses',
+      name: 'SupervisorCourses',
+      component: () => import('../views/dashboard/supervisor/ViewCourses.vue')
+    },
+    // 2. عرض دفعات مساق معين (تستخدم كجدول دفعات مع فلترة)
+    {
+      path: 'courses/:courseId/batches',
+      name: 'SupervisorBatches',
+      component: () => import('../views/dashboard/supervisor/ViewBatches.vue')
+    },
+    // 3. تفاصيل الدفعة (تعرض كروت الدفعة + جدول المجموعات التابعة لها)
+    {
+      path: 'batches/:batchId', 
+      name: 'BatchDetails',
+      component: () => import('../views/dashboard/supervisor/BatchesDetails.vue')
+    },
+    // 4. تفاصيل المجموعة (تعرض كروت المجموعة + جدول الطلاب)
+    {
+      path: 'batches/:batchId/groups/:groupId',
+      name: 'GroupDetails',
+      component: () => import('../views/dashboard/supervisor/ViewGroups.vue')
+    }
+  ]
+}
     ]
   },
 
@@ -105,6 +162,11 @@ const routes = [
     name: 'Register',
     component: RegisterPage
   },
+   {
+      path: '/SelectProgram',
+      name: 'programsRegester',
+      component:selectProgram
+    },
   {
     path: '/:pathMatch(.*)*',
     name: 'NotFound',

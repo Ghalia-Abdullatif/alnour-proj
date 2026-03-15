@@ -1,0 +1,1805 @@
+{
+  "info": {
+    "_postman_id": "alnoor-system-api-complete",
+    "name": "AlNoor System API - Complete Collection",
+    "description": "Complete Postman collection for the current Django REST API endpoints with example requests.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{auth_token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000/api",
+      "type": "string"
+    },
+    {
+      "key": "auth_token",
+      "value": "your_jwt_token_here",
+      "type": "string"
+    },
+    {
+      "key": "account_id",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "user_id",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "person_id",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "program_id",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "batch_id",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "group_id",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "report_id",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "template_id",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "question_id",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "tracking_code",
+      "value": "TRACK123456",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Accounts & Authentication",
+      "item": [
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/accounts/auth/login/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "accounts",
+                "auth",
+                "login"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"username\": \"user@example.com\",\n    \"password\": \"YourPassword123\"\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Verify Login 2FA",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/accounts/auth/login/verify-2fa/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "accounts",
+                "auth",
+                "login",
+                "verify-2fa"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"session_id\": \"your_session_id\",\n    \"code\": \"123456\"\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/accounts/auth/logout/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "accounts",
+                "auth",
+                "logout"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Current User",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/accounts/me/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "accounts",
+                "me"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Account (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/accounts/register/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "accounts",
+                "register"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"newuser@example.com\",\n    \"password\": \"StrongPass123!\",\n    \"person\": 1\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Activate Account For Person",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/accounts/activate/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "accounts",
+                "activate"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"person_id\": 1,\n    \"email\": \"person@example.com\"\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Request Password Reset",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/accounts/password-reset/request/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "accounts",
+                "password-reset",
+                "request"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"user@example.com\"\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Confirm Password Reset",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/accounts/password-reset/confirm/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "accounts",
+                "password-reset",
+                "confirm"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"token\": \"reset_token_here\",\n    \"new_password\": \"NewStrongPass123!\"\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Change Password",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/accounts/password/change/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "accounts",
+                "password",
+                "change"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"old_password\": \"OldPass123!\",\n    \"new_password\": \"NewPass123!\"\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Request Email Change",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/accounts/email/change/request/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "accounts",
+                "email",
+                "change",
+                "request"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"new_email\": \"new@example.com\",\n    \"password\": \"YourPassword123\"\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Confirm Email Change",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/accounts/email/change/confirm/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "accounts",
+                "email",
+                "change",
+                "confirm"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"token\": \"email_change_token\"\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List Accounts",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/accounts/accounts/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "accounts",
+                "accounts"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Retrieve Account",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/accounts/accounts/{{account_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "accounts",
+                "accounts",
+                "{{account_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List Roles",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/accounts/roles/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "accounts",
+                "roles"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List Account Roles",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/accounts/account-roles/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "accounts",
+                "account-roles"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List Preferred Roles",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/accounts/preferred-roles/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "accounts",
+                "preferred-roles"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "List All Users",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/users/all/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                "all"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Retrieve User",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/users/all/{{user_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                "all",
+                "{{user_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List General Admins",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/users/general-admins/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                "general-admins"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List Batch Supervisors",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/users/batch-supervisors/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                "batch-supervisors"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List Group Supervisors",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/users/group-supervisors/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                "group-supervisors"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List Teachers",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/users/teachers/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                "teachers"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List Students",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/users/students/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                "students"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "People",
+      "item": [
+        {
+          "name": "List People",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/people/Person/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "people",
+                "Person"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Person",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/people/Person/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "people",
+                "Person"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"first_name\": \"محمد\",\n    \"last_name\": \"أحمد\",\n    \"gender\": \"M\",\n    \"birth_date\": \"1998-01-01\",\n    \"national_id\": \"1234567890\",\n    \"phone\": \"+966500000000\",\n    \"email\": \"person@example.com\"\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Retrieve Person",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/people/Person/{{person_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "people",
+                "Person",
+                "{{person_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Person",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/people/Person/{{person_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "people",
+                "Person",
+                "{{person_id}}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"first_name\": \"محمد\",\n    \"last_name\": \"أحمد\",\n    \"phone\": \"+966511111111\",\n    \"email\": \"person.updated@example.com\"\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Person",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/people/Person/{{person_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "people",
+                "Person",
+                "{{person_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List Countries",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/people/countries/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "people",
+                "countries"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Batches",
+      "item": [
+        {
+          "name": "List Batches",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/batches/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "batches"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Batch",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/batches/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "batches"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"program\": 1,\n    \"batch_supervisor\": 1,\n    \"status\": 1,\n    \"current_level\": \"المستوى الأول\",\n    \"num_group\": 4,\n    \"start_date\": \"2026-01-01\",\n    \"end_date\": \"2026-12-31\"\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Retrieve Batch",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/batches/{{batch_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "batches",
+                "{{batch_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Batch",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/batches/{{batch_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "batches",
+                "{{batch_id}}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"program\": 1,\n    \"batch_supervisor\": 1,\n    \"status\": 1,\n    \"current_level\": \"المستوى الثاني\",\n    \"num_group\": 5,\n    \"start_date\": \"2026-01-01\",\n    \"end_date\": \"2026-12-31\"\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Batch",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/batches/{{batch_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "batches",
+                "{{batch_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List Batch Statuses",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/batches/batch-statuses/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "batches",
+                "batch-statuses"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Groups",
+      "item": [
+        {
+          "name": "List Groups",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/groups/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "groups"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Group",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/groups/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "groups"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"batch\": 1,\n    \"group_supervisor\": 1,\n    \"teacher\": 1,\n    \"name\": \"المجموعة A\",\n    \"capacity\": 25\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Retrieve Group",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/groups/{{group_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "groups",
+                "{{group_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Group",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/groups/{{group_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "groups",
+                "{{group_id}}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"batch\": 1,\n    \"group_supervisor\": 1,\n    \"teacher\": 1,\n    \"name\": \"المجموعة A - محدثة\",\n    \"capacity\": 25\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Group",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/groups/{{group_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "groups",
+                "{{group_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List Group Students",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/groups/group-students/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "groups",
+                "group-students"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Registration",
+      "item": [
+        {
+          "name": "Submit Registration",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/registration/submit/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "registration",
+                "submit"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"person\": 1,\n    \"program\": 1,\n    \"notes\": \"طلب تسجيل تجريبي\"\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Track Registration",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/registration/track/{{tracking_code}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "registration",
+                "track",
+                "{{tracking_code}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Approve Registration",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/registration/1/approve/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "registration",
+                "1",
+                "approve"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Reject Registration",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/registration/1/reject/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "registration",
+                "1",
+                "reject"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"reason\": \"سبب الرفض\"\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List Registration Requests",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/registration/requests/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "registration",
+                "requests"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Registration Request",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/registration/requests/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "registration",
+                "requests"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"person\": 1,\n    \"program\": 1,\n    \"notes\": \"طلب من الإدارة\"\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List Registration Settings",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/registration/settings/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "registration",
+                "settings"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Registration Settings",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/registration/settings/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "registration",
+                "settings"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"program\": 1,\n    \"is_open\": true,\n    \"max_accepted\": 100\n}"
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Notifications",
+      "item": [
+        {
+          "name": "List Notifications",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/notifications/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "notifications"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Notification",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/notifications/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "notifications"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"title\": \"إشعار مهم\",\n    \"message\": \"هذا إشعار تجريبي\",\n    \"recipient\": 1,\n    \"type\": \"info\"\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Retrieve Notification",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/notifications/1/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "notifications",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Notification",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/notifications/1/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "notifications",
+                "1"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"title\": \"إشعار محدث\",\n    \"message\": \"تم تحديث الإشعار\"\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Notification",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/notifications/1/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "notifications",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Reports",
+      "item": [
+        {
+          "name": "List Report Templates",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/reports/report-templates/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "reports",
+                "report-templates"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Report Template",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/reports/report-templates/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "reports",
+                "report-templates"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"تقرير أسبوعي\",\n    \"description\": \"قالب تقرير أسبوعي\",\n    \"is_active\": true\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Retrieve Report Template",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/reports/report-templates/{{template_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "reports",
+                "report-templates",
+                "{{template_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List Template Questions",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/reports/template-questions/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "reports",
+                "template-questions"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Template Question",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/reports/template-questions/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "reports",
+                "template-questions"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"report_template\": 1,\n    \"question_text\": \"كيف كان التقدم هذا الأسبوع؟\",\n    \"question_type\": \"text\",\n    \"allow_comment\": false,\n    \"order_num\": 1,\n    \"is_required\": true\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List Template Question Options",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/reports/template-question-options/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "reports",
+                "template-question-options"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Template Question Option",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/reports/template-question-options/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "reports",
+                "template-question-options"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"question\": 1,\n    \"option_text\": \"ممتاز\",\n    \"order_num\": 1\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List Report Statuses",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/reports/report-statuses/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "reports",
+                "report-statuses"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List Reports",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/reports/reports/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "reports",
+                "reports"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Report",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/reports/reports/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "reports",
+                "reports"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"report_template\": 1,\n    \"group\": 1,\n    \"batch\": null,\n    \"report_date\": \"2026-03-12\"\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Retrieve Report",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/reports/reports/{{report_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "reports",
+                "reports",
+                "{{report_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Report",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/reports/reports/{{report_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "reports",
+                "reports",
+                "{{report_id}}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"report_template\": 1,\n    \"group\": 1,\n    \"batch\": null,\n    \"report_date\": \"2026-03-12\"\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Report",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/reports/reports/{{report_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "reports",
+                "reports",
+                "{{report_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Send Report",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/reports/reports/{{report_id}}/send_report/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "reports",
+                "reports",
+                "{{report_id}}",
+                "send_report"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"recipient_user_ids\": [\n        2,\n        3\n    ]\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Submit Answers",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/reports/reports/{{report_id}}/submit_answers/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "reports",
+                "reports",
+                "{{report_id}}",
+                "submit_answers"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"answers\": [\n        {\n            \"question\": 1,\n            \"answer_text\": \"تم الإنجاز بشكل جيد\",\n            \"comment_text\": \"\"\n        }\n    ]\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Mark As Seen",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/reports/reports/{{report_id}}/mark_as_seen/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "reports",
+                "reports",
+                "{{report_id}}",
+                "mark_as_seen"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Close Report",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/reports/reports/{{report_id}}/close_report/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "reports",
+                "reports",
+                "{{report_id}}",
+                "close_report"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Export Report PDF",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/reports/reports/{{report_id}}/export_pdf/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "reports",
+                "reports",
+                "{{report_id}}",
+                "export_pdf"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List Report Recipients",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/reports/report-recipients/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "reports",
+                "report-recipients"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List Report Answers",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/reports/report-answers/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "reports",
+                "report-answers"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List Report Event Types",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/reports/report-event-types/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "reports",
+                "report-event-types"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List Report Events",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/reports/report-events/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "reports",
+                "report-events"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
