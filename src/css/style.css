@@ -21,32 +21,32 @@
   --spacing-4: 1rem;
   --spacing-5: 1.25rem;
   --spacing-6: 1.5rem;
-/*test theme 983A3A*/
+  /*test theme 983A3A*/
   --color-primary: #761717;
-  --color-primaryh: #ECD7D7;
-  --color-yellow:#EBC347;
-  --color-golden:#A06E2D;
-  --color-yellowh:#E5D196;
-  --color-basicBlack:#2E382E;
-   --color-basicGray:#78817D;
-    --color-basicGrayh:#C2CACB;
-    --color-cardYellow: #F3EDD6;
-    --color-cardCasterd:#E5D196;
---color-cardBrown:#EBE1CC;
---color-Brown:#6C481A;
-
+  --color-primaryh: #ecd7d7;
+  --color-yellow: #ebc347;
+  --color-golden: #a06e2d;
+  --color-yellowh: #e5d196;
+  --color-basicBlack: #2e382e;
+  --color-basicGray: #78817d;
+  --color-basicGrayh: #c2cacb;
+  --color-cardYellow: #f3edd6;
+  --color-cardCasterd: #e5d196;
+  --color-cardBrown: #ebe1cc;
+  --color-Brown: #6c481a;
+  --color-card: #fcfdfc;
 
   /* الألوان الإسلامية الهادئة */
   --color-flag-red: #c72121;
-  --color-golden: #EEB20F;
+  --color-golden: #eeb20f;
   --color-gold-hover: #d9c892;
-  --color-background: #F6F0EE; /* خلفية الصفحة */
-  --color-layer: #ebf7e1;      /* لون الطبقات */
+  --color-background: #f9fbf8; /* خلفية الصفحة */
+  --color-layer: #ebf7e1; /* لون الطبقات */
   --color-border: #90988a;
   --color-text-gray: #343832;
   --color-text-black: #191b19;
   --color-green-primary: #193402; /* اللون الأساسي للمقرأة */
-  --color-green-hover: #85A864;
+  --color-green-hover: #85a864;
 }
 
 /* ============================================================
@@ -54,7 +54,6 @@
    نستخدم @apply لاستعارة قوة تيلوند داخل كلاسات مخصصة
    ============================================================ */
 @layer components {
-  
   /* 1. مكون الصندوق الرئيسي (Auth Card) */
   /* تنسيق بطاقة المصادقة بخلفية شفافة:
      - bg-white/80: تعني خلفية بيضاء بامتصاص 80% (شفافية 20%).
@@ -65,15 +64,15 @@
     sm:min-h-0 sm:rounded-[50px] rounded-none
     flex flex-col justify-center px-6 py-10 sm:p-10 
     bg-white/95 backdrop-blur-sm;
-    
+
     /* الأبعاد والحواف التي حددتِها سابقاً */
-    border-radius: ; 
-    
+    /* border-radius: ;  */
+
     /* تأثير الشفافية والتضبيب */
     background-color: rgba(255, 255, 255, 0.85); /* أبيض شفاف */
     backdrop-filter: blur(12px); /* تأثير تضبيب الخلفية */
     -webkit-backdrop-filter: blur(12px); /* لدعم متصفحات سفاري */
-    
+
     /* حدود خفيفة جداً لتعريف حواف البطاقة */
     border: 1px solid rgba(255, 255, 255, 0.3);
   }
@@ -105,10 +104,11 @@
   }
 
   /* 3. حقول الإدخال (Inputs) */
-  input:not([type="radio"]), .select {
+  input:not([type="radio"]),
+  .select {
     @apply w-full outline-none transition-all duration-300 shadow-sm border-2;
     padding: var(--spacing-3) var(--spacing-4);
-    background-color:var(--color-background);
+    background-color: var(--color-background);
     border-color: var(--color-border);
     border-radius: 0.75rem; /* rounded-xl */
     font-size: 0.875rem;
@@ -123,11 +123,11 @@
   /* حالة التركيز للحقل */
   input:focus {
     border-color: var(--color-green-primary);
-    box-shadow: 0 0 0 .5px var(--color-green-primary);
+    box-shadow: 0 0 0 0.5px var(--color-green-primary);
   }
 
   /* 4. الأزرار (Buttons) */
-  
+
   /* الزر الأساسي - بنفس أحجامك السابقة */
   .btn-primary {
     @apply text-center transition-all duration-200 cursor-pointer border-none flex items-center justify-center;
@@ -141,7 +141,7 @@
 
   .btn-primary:hover {
     @apply -translate-y-0.5 shadow-md;
-    background-color: var(--color-green-hover);
+    background-color: var(--color-primaryh);
     color: var(--color-layer);
   }
 
@@ -188,6 +188,20 @@
     border-color: var(--color-flag-red) !important;
   }
 }
+h2 {
+  @apply sm:text-2xl text-xl font-bold;
+}
+h3{
+    @apply sm:text-xl  text-lg font-bold;
+
+}
+h4{
+    @apply sm:text-lg  text-sm font-bold;
+
+}
+.icon {
+  @apply w-5 text-center text-sm;
+}
 
 /* التنسيق العام لصفحات الموقع */
 body {
@@ -195,10 +209,36 @@ body {
   background-color: var(--color-layer);
   font-family: var(--font-tajawal);
 }
+/* السكرول بار */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px; /* زيادة العرض قليلاً ليكون مرئياً */
+  height: 6px;
+}
 
+.custom-scrollbar::-webkit-scrollbar-track {
+  background:  var(--color-layer); /* خلفية شفافة للحاوية */
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  /* نستخدم background-color مباشرة بدلاً من @apply للتأكد من القوة */
+  background-color: var(--color-basicGrayh) !important; 
+    height: 6px;
+
+  border-radius: 20px;
+  border: 1px solid transparent; /* يعطي مساحة وهمية تجعله يبدو أنحف وأجمل */
+ 
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-basicGray) !important;
+}
 /* لضمان تجاوب النصوص في الشاشات المتوسطة */
 @media (min-width: 768px) {
   label {
     @apply text-base;
   }
+}
+body{
+      @apply text-lg ;
+
 }

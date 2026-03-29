@@ -5,7 +5,7 @@
     :columns="courseColumns"
     :showAddButton=true
     :data="allCourses"
-:show-actions="['edit', 'delete']"  
+    :show-actions="['edit', 'delete']"  
   @row-click="goToBatches"
   >
     <template #top-widgets>

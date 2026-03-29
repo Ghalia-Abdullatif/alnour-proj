@@ -4,6 +4,7 @@ import'./css/normalize.css'
 import'bootstrap-icons/font/bootstrap-icons.css'
 import '@fortawesome/fontawesome-free/css/all.css'
 import { createPinia } from 'pinia'
+import piniaPluginPersistedstate from 'pinia-plugin-persistedstate' // استيراد الإضافة
 import router from './router'
 import VueTelInput from 'vue-tel-input';
   import 'flatpickr/dist/flatpickr.css';
@@ -22,6 +23,8 @@ const app = createApp(App)
 
 // إنشاء Pinia
 const pinia = createPinia()
+pinia.use(piniaPluginPersistedstate) // تسجيل الإضافة في Pinia
+
 
 // إضافة Pinia قبل mount
 app.use(pinia)

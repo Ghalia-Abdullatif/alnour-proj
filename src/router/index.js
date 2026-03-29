@@ -2,6 +2,8 @@ import { createRouter, createWebHistory } from 'vue-router'
 //صفحات تسجيل الدخول 
 import AuthLayout from'../views/auth/AuthLayout.vue'
 import LoginPage from "../views/auth/LoginPage.vue";
+import TowFactor from'@/views/auth/TowFactor.vue'
+import ChoseRole from'@/views/auth/ChoseRole.vue'
 
 // المكونات الرئيسية
 import Dashboard from '../views/dashboard/DashBoard.vue'
@@ -33,6 +35,25 @@ const routes = [
         component: LoginPage,
         meta: { title: 'تسجيل الدخول - مقرأة النور' }
       },
+       {
+        // مسار تسجيل التحقق بخطوتين
+        path: 'TowFactor',
+        name: 'TowFactor',
+        component: TowFactor,
+       props: (route) => ({
+    codeLength: Number(route.query.codeLength) || 6,
+    nextPageUrl: route.query.nextPageName
+  }),//لاستقبال البينات بالراوتر
+        meta: { title: 'تسجيل الدخول - مقرأة النور' }
+      },
+       {
+        // مسار تسجيل الدخول الأساسي
+        path: 'ChoseRole',
+        name: 'ChoseRole',
+        component: ChoseRole,
+        meta: { title: 'اختيار الدور - مقرأة النور' }
+      },
+  
   
     ]
   },
