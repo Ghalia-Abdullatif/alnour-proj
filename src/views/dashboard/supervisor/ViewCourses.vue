@@ -3,7 +3,7 @@
     title="إدارة المساقات الدراسية"
     description="نظرة عامة على البرامج التعليمية المتاحة (مثاني ومعارج)"
     :columns="courseColumns"
-    :showAddButton=true
+    showAddButton="إضافة مستخدم"
     :data="allCourses"
     :show-actions="['edit', 'delete']"  
   @row-click="goToBatches"

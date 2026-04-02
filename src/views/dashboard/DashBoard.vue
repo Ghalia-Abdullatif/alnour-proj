@@ -205,8 +205,9 @@ if(result.success){
 }
 
 /* السايدبار بتصميم ثابت */
+
 .sidebar-container {
-  @apply fixed h-full inset-y-0 right-0 z-[120] w-72 bg-background flex flex-col 
+  @apply fixed h-full inset-y-0 right-0 z-[120] w-2/3 md:w-72 lg:w-1/8 bg-background flex flex-col 
          transition-all duration-300 lg:static lg:translate-x-0 border-l border-primary/10 shadow-2xl lg:shadow-none;
 }
 .sidebar-header {

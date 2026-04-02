@@ -10,7 +10,8 @@ import Dashboard from '../views/dashboard/DashBoard.vue'
 import AdminLayout from '../views/dashboard/admin/AdminHome.vue'
 import AdminRegistration from '../views/dashboard/admin/AdminRegistration.vue'
 
-// صفحات عامة
+// صفحات الداشبورد
+import UsersLog from'@/views/dashboard/viewUsers.vue'
 import selectProgram from '../views/registration/SelectProgram.vue'
 import RegisterPage from '../views/registration/RegisterPage.vue'
 
@@ -67,6 +68,12 @@ const routes = [
     name: 'Dashboard',
     component: Dashboard,
     children: [
+       {
+            path: 'UsersLog',
+            name: 'UsersLog',
+            component: () =>UsersLog,
+            meta: { roles: ['admin', 'superadmin'] }
+          },
       // لوحة التحكم للادمن
       {
         path: 'admin',

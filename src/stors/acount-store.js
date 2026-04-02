@@ -67,7 +67,7 @@ export const useAuthStore = defineStore("auth", {
     //  ميثود تهيئة الجلسة (للحصول على CSRF)
     async initSession() {
       try {
-        const { url, method } = endpoint.users.getUsers;
+        const { url, method } = endpoint.getcrtf;
         await requestData(url, method);
         return true;
       } catch (err) {
