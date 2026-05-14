@@ -18,7 +18,7 @@ const props = defineProps({
   options: { type: Array, default: () => [] },
   name: String,
   required: { type: Boolean, default: false },
-  customClass: { type: Array, default: '' },
+  customClass: { type: [Array, String], default: '' },
   underselect: { type: Boolean, default: true },
  
 })
@@ -107,7 +107,7 @@ onUnmounted(() => {
 
     <div class="flex justify-end items-center w-full col-span-3 h-full">
       <img
-        src="../../assets/icons/select.svg"
+        src="/assets/icons/select.svg"
         :class="['w-6 h-6 transition-transform', open ? 'rotate-180' : '']"
       />
     </div>

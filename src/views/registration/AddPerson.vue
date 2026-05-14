@@ -1,4 +1,4 @@
-<script setup>
+<!-- <script setup>
 import { reactive, ref, computed, watch } from "vue";
 import { useValidation } from "../../utils/useValidation";
 import DatePicker from "../../components/global/DatePicker.vue"; // مكون FlatPicker الجاهز
@@ -9,7 +9,21 @@ import FieldContainer from "../../components/global/FieldContainer.vue";
 import conteris from '../../components/json/counterys.json'
 const props =defineProps(
     {
-    puttonLabel:{ type: String, default: '' }
+    puttonLabel:{ type: String, default: '' },
+    initFormData:{typy:Object ,default:{
+  firstName: "",
+  secondName: "",
+  thirdName: "",
+  fourthName: "",
+  birthDate: "",
+  country: "",
+  // state: "",
+  email: "",
+  phoneKey: { id: "SD", value: "السودان", icon: "sd", dialCode: "+249" },
+  phone: "",
+  telegram: "",
+}}
+    
     }
  
 )
@@ -46,25 +60,13 @@ const emit = defineEmits([ 'supmit'])
 
 
 /* ================= الفورم ================= */
-const formData = reactive({
-  firstName: "",
-  secondName: "",
-  thirdName: "",
-  fourthName: "",
-  birthDate: "",
-  country: "",
-  state: "",
-  email: "",
-  phoneKey: { id: "SD", value: "السودان", icon: "sd", dialCode: "+249" },
-  phone: "",
-  telegram: "",
-});
-watch(formData.country,()=>{
-  if(!formData.country=="السودان"){
-    console.log("iiii")
-    formData.state=""
-  }
-})
+const formData = reactive({...initFormData});
+// watch(formData.country,()=>{
+//   if(!formData.country=="السودان"){
+//     console.log("iiii")
+//     formData.state=""
+//   }
+// })
 const isFormValid = computed(() => {
   return (
     Object.values(formData).every((v) => v !== "") &&
@@ -84,12 +86,94 @@ const handleSubmit = () => {
 
   alert(`'تم استلام طلبك بنح! ✅ `);
 };
+</script> -->
+
+<script setup>
+import { reactive, ref, computed, watch } from "vue";
+import { useValidation } from "../../utils/useValidation";
+import DatePicker from "../../components/global/DatePicker.vue"; // مكون FlatPicker الجاهز
+import SelectItem from "../../components/global/SelectItem.vue";
+import PhoneNumber from "../../components/global/PhoneNumber.vue";
+import LableItem from "../../components/global/LableItem.vue";
+import FieldContainer from "../../components/global/FieldContainer.vue";
+import conteris from '../../components/json/counterys.json'
+// ... باقي الاستيرادات ...
+
+const props = defineProps({
+  puttonLabel: { type: String, default: 'حفظ' },
+  initFormData: { 
+    type: Object, 
+    // القيم الافتراضية في حال كانت عملية إضافة جديدة
+    default: () => ({
+      firstName: "", secondName: "", thirdName: "", fourthName: "",
+      birthDate: "", country: "", email: "", phone: "",
+      phoneKey: { id: "SD", value: "السودان", icon: "sd", dialCode: "+249" },
+      telegram: "",
+    })
+  }
+});
+
+const emit = defineEmits(['supmit', 'cancel']);
+const { errors, validateField, validateForm } = useValidation();
+const formRef = ref(null);
+const phoneRef = ref();
+
+
+
+/* ================= الدول ================= */
+const countries =ref(conteris);
+
+// 1. تعريف الكائن بشكل فارغ أولاً
+const formData = reactive({
+  firstName: "", secondName: "", thirdName: "", fourthName: "",
+  birthDate: "", country: "", email: "", phone: "",
+  phoneKey: { id: "SD", value: "السودان", icon: "sd", dialCode: "+249" },
+  telegram: "",
+});
+
+// 2. دالة لمزامنة البيانات (تحديث formData من الـ props)
+const syncFormData = () => {
+  if (props.initFormData) {
+    // نستخدم Object.assign للحفاظ على التفاعل (Reactivity)
+    Object.assign(formData, props.initFormData);
+  }
+};
+
+// 3. مراقبة الـ Props للتأكد من تحديث الفورم عند تغيير المستخدم المختار
+watch(() => props.initFormData, () => {
+  syncFormData();
+}, { deep: true, immediate: true }); // immediate تضمن التنفيذ حتى عند أول تحميل
+
+const handleSubmit = () => {
+  console.log(`${!phoneRef.value.validate()}`);
+
+  if (!validateForm(formRef.value) || !phoneRef.value.validate()){
+
+     return;
+  }
+  
+      emit('supmit', {name:"personData" ,message:formData} )
+
+  // alert(`'تم استلام طلبك بنح! ✅ `);
+};
+// دالة التعامل مع الإلغاء
+const handleCancel = () => {
+  // يمكنك هنا إضافة منطق لتفريغ الحقول إذا أردتِ قبل الإرسال
+  emit('cancel');
+};
+// const handleSubmit = () => {
+//   if (!validateForm(formRef.value) || !phoneRef.value.validate()){
+//      return;
+//   }
+//   // إرسال نسخة من البيانات لتجنب أي مشاكل في المكون الأب
+//   emit('supmit', { ...formData });
+// };
 </script>
 
 
 <template>
      <div
-      class="bg-background w-full max-w-3xl rounded-[24px] md:rounded-[32px] p-5 md:p-10 shadow-2xl border border-gray-200 absolute"
+      class="bg-background w-full  max-w-3xl rounded-[24px] md:rounded-[32px] p-5 md:p-10 shadow-2xl border border-gray-200 absolute"
     >
                 <slot name="top"/>
 
@@ -185,30 +269,30 @@ const handleSubmit = () => {
             />
           </FieldContainer>
         </div>
-        <!-- الولاية -->
-        <transition name="fade">
-          <FieldContainer
-            v-if="formData.country.value === 'السودان'"
-            :errors="errors"
-            :required="true"
-            name="state"
-            label="الولاية :"
-            fieldContainerStyle="space-y-2 text-right"
-          >
-            <SelectItem
-              ariaLabel="اختر الولاية"
-              :options="sudanStates"
-              v-model:selected="formData.state"
-              labelKey="name"
-              valueKey="name"
-              name="state"
-              :required="true"
-              :localError="errors.state ? true : false"
-              placeholder="اختر الولاية"
-              @error="(e) => (errors[e.name] = e.message)"
-            />
-          </FieldContainer>
-        </transition>
+         <!-- الولاية
+        // <transition name="fade">
+        //   <FieldContainer
+        //     v-if="formData.country.value === 'السودان'"
+        //     :errors="errors"
+        //     :required="true"
+        //     name="state"
+        //     label="الولاية :"
+        //     fieldContainerStyle="space-y-2 text-right"
+        //   >
+        //     <SelectItem
+        //       ariaLabel="اختر الولاية"
+        //       :options="sudanStates"
+        //       v-model:selected="formData.state"
+        //       labelKey="name"
+        //       valueKey="name"
+        //       name="state"
+        //       :required="true"
+        //       :localError="errors.state ? true : false"
+        //       placeholder="اختر الولاية"
+        //       @error="(e) => (errors[e.name] = e.message)"
+        //     />
+        //   </FieldContainer>
+        // </transition> -->
 
         <!-- باقي الحقول (البريد والهاتف والتلجرام) -->
         <FieldContainer
@@ -282,6 +366,8 @@ const handleSubmit = () => {
 
           <button
             type="button"
+             @click="handleCancel"
+
             class="w-full btn-secondry transition-all"
           >
             إلغاء

@@ -191,6 +191,33 @@ getUsersWithRoles(state) {
            this.$persist(); 
        }
     },
+    async createPerson(personData){
+    this.loading = true;
+            this.error = null;
+                          console.log("Creating account with data:pepooole", personData);
+
+            try {
+              console.log("Creating account with data:pepooole", personData);
+              console.log(endpoint.pepole.creatPerson, "Endpoint details");
+              const { url, method } = endpoint.pepole.creatPerson;
+              const { data, error } = await requestData(url, method, personData);
+              console.log("Response from create account API:", { data, error });
+      
+              if (data) {
+                console.log(data, "Account created successfully");
+                // نرجع البيانات للواجهة لمعرفة ما إذا كان يجب التوجه لصفحة الـ 2FA.
+                return { success: true, ...data };
+              }
+              this.error = error;
+              console.log(error, "Error creating account");
+              return { success: false, message: error };
+            } catch (err) {
+              return { success: false, message: "فشل الاتصال بخادم النظام." };
+            } finally {
+              this.loading = false;
+            }
+    }
+    ,
     async getAllusers(){
              try {
       
@@ -345,7 +372,7 @@ const { data, error } = await requestData(finalUrl, method);
        try {
         console.log("udeletttterl" ,endpoint.pepole.deleteAccountRole)
         const { url, method } = endpoint.pepole.deleteAccountRole;
-              const finalUrl = `${url}${PersonId}/`; 
+              const finalUrl = `${url}${roleId}/`; 
 
 
         const { data, error } = await requestData(finalUrl , method);
@@ -368,7 +395,31 @@ const { data, error } = await requestData(finalUrl, method);
             }
           
           },
+///////////
+ async addRoleToAccount(roleData) {
+      this.loading = true;
+      this.error = null;
+      try {
+        console.log("linkk",endpoint.pepole.addAccountRole)
+        const { url, method } = endpoint.pepole.addAccountRole;
+        const { data, error } = await requestData(url, method, roleData);
+                console.log("linkk",endpoint.pepole)
 
+
+        if (data) {
+                      console.log("linkk","نجحححححححححح")
+
+         
+          return { success: true, ...data };
+        }
+        this.error = error;
+        return { success: false, message: error };
+      } catch (err) {
+        return { success: false, message: "فشل الاتصال بخادم النظام." };
+      } finally {
+        this.loading = false;
+      }
+    },
 
 
 

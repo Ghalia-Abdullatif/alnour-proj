@@ -177,6 +177,9 @@
       background-repeat: no-repeat;
     }
   }
+  .modal-actions {
+  @apply flex gap-4 w-full;
+}
 
   /* 6. نصوص الأخطاء */
   .error-text {
@@ -188,14 +191,14 @@
     border-color: var(--color-flag-red) !important;
   }
 }
-h2 {
+h2 ,.h2{
   @apply sm:text-2xl text-xl font-bold;
 }
-h3{
+h3,.h3{
     @apply sm:text-xl  text-lg font-bold;
 
 }
-h4{
+h4,.h4{
     @apply sm:text-lg  text-sm font-bold;
 
 }

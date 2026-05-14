@@ -3,6 +3,8 @@ import { ref, computed, onMounted, onUnmounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import logoUrl from "/assets/logos/logo.png";
 import { useAuthStore } from "@/stors/acount-store.js";
+import ConfirmModal from '@/components/confirmAndSucces/ConfirmModal.vue'; 
+
 
 const authStore = useAuthStore();
 
@@ -10,6 +12,12 @@ const router = useRouter();
 const route = useRoute();
 const isMenuOpen = ref(false);
 const windowWidth = ref(window.innerWidth);
+const isConfirmOpen = ref(false);
+const confirmData = {
+   
+    message: "هل انت متأكد من تسجيل الخروج؟",
+    actionType: 'Loo-Out',
+  };
 
 // مراقبة حجم الشاشة لتحديد وضع الجوال/الديسكتوب
 const updateWidth = () => {
@@ -48,7 +56,7 @@ const switchRole=()=>{
 
 const handleLogout = async () => {
   // 1. تأكيد الخروج من المستخدم
-  if (confirm("هل أنتِ متأكدة من تسجيل الخروج؟")) {
+ 
     try {
       // 2. استدعاء ميثود الستور (التي ستقوم بطلب السيرفر والتوجيه)
    const result = await authStore.logoutUser() 
@@ -63,7 +71,6 @@ if(result.success){
       console.log("✅ تمت عملية تسجيل الخروج بنجاح");
     } catch (error) {
       console.error("❌ فشل تسجيل الخروج:", error);
-    }
   }
 };
 
@@ -102,12 +109,14 @@ if(result.success){
         </div> -->
 
         <div class="user-card">
+          <div class=" flex flex-row gap-1">
           <div class="user-avatar"><i :class= authStore.getCurrentRole.icon></i></div>
           <div class="overflow-hidden">
             <p class="user-name">{{ userData.name }}</p>
 
             <p class="user-role">{{ userData.role }}</p>
-          </div>
+          </div>          </div>
+
           <button v-if="authStore.getEnablesRoles.length>1" class="switch-role" @click="switchRole">تبديل الدور</button>
 
           <!-- <i class="fas fa-shuffle text-xs text-cardCasterd"></i>         -->
@@ -137,7 +146,7 @@ if(result.success){
       </nav>
 
       <div class="sidebar-footer">
-        <button @click="handleLogout" class="btn-logout">
+        <button @click="isConfirmOpen=true" class="btn-logout">
           <i class="fas fa-power-off"></i> تسجيل الخروج
         </button>
       </div>
@@ -156,9 +165,9 @@ if(result.success){
           </button>
            <img  :src="logoUrl" class="w-6 h-6 contain hidden lg:block" />
 
-          <h2>{{ currentRouteName }}</h2>
+          <h3>{{ currentRouteName }}</h3>
         </div>
-        <div class="flex items-center gap-3"><i class="fa fa-bell icon text-cardCasterd  text-xl"></i>
+        <div class="flex items-center gap-3"><i class="fa fa-bell icon text-cardCasterd lg:text-sm  text-xl"></i>
 </div>
       </header>
 
@@ -188,11 +197,18 @@ if(result.success){
           ]"
         >
           <i :class="[item.icon, 'icon mb-1']"></i>
-          <span class="text-[10px] font-bold">{{ item.name }}</span>
+          <span class="h4 font-bold">{{ item.name }}</span>
         </div>
         <div v-if="route.path === item.path" class="nav-indicator"></div>
       </router-link>
     </nav>
+<ConfirmModal 
+    :show="isConfirmOpen"
+    :title="confirmData.title"
+    :message="confirmData.message"
+    @confirm="handleLogout"
+    @cancel="isConfirmOpen = false"
+  />
   </div>
 </template>
 
@@ -214,7 +230,7 @@ if(result.success){
   @apply p-6 shrink-0 bg-white/10;
 }
 .sidebar-nav {
-  @apply flex-1 p-4 space-y-1 overflow-y-auto;
+  @apply flex-1 p-2 space-y-1 overflow-y-auto;
 }
 .sidebar-footer {
   @apply p-4 border-t border-primary/10 shrink-0 bg-white/5;
@@ -234,16 +250,16 @@ if(result.success){
 
 /* بطاقة المستخدم والعناصر */
 .user-card {
-  @apply bg-white/40 p-3 rounded-2xl flex items-center gap-3 border border-primary/5 shadow-sm;
+  @apply bg-white/40 p-2 rounded-2xl flex lg:flex-col justify-between items-center gap-3 border border-primary/5 shadow-sm;
 }
 .user-avatar {
-  @apply w-9 h-9 rounded-full bg-primary flex items-center justify-center text-white shrink-0;
+  @apply w-9 h-9 lg:h-7 lg:w-7 rounded-full bg-primary flex items-center justify-center text-white shrink-0;
 }
 .user-name {
   @apply font-bold text-primary text-xs truncate;
 }
 .user-role {
-  @apply text-[9px] text-Brown/60 block;
+  @apply text-[8px] text-Brown/60 block;
 }
 .switch-role {
   @apply bg-cardCasterd text-[9px] text-basicBlack p-2 my-2 rounded-xl hover:bg-primary hover:text-white;

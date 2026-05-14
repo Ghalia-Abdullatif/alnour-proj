@@ -96,7 +96,7 @@ export const premitinMenu = [
   {
                                     id:"MangeProfile",
 
-    name: "الملف الشخصي",
+    name: " الشخصية",
     path: "/Dashboard/admin/profile",
     icon: "fas fa-user-circle",
   },

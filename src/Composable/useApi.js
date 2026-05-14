@@ -115,6 +115,7 @@ export async function requestData(url, method = 'GET', body = null, contentType 
         console.log("refreeesh sessionnnnnnnnnnnnnnnnnnnnnnn")
           errorMessage = "انتهت الجلسة، يرجى تسجيل الدخول مرة أخرى.";
           errorType = "AUTH_ERROR";
+           return {success: false,...error };
           // هنا عادة يتم توجيه المستخدم لصفحة Login إذا لم يقم الـ interceptor بذلك
           break;
         case 403:

@@ -52,7 +52,7 @@
               @blur="validateField($event.target)"
           /></FieldContainer>
         </div>
-        <p class="error-text" v-show="error">{{ error }}</p>
+        <p class="error-text w-full text-center" v-show="error">{{ error }}</p>
 
         <BaseButton
           :loading="loading"
@@ -195,7 +195,7 @@ const handleLogin = async () => {
     console.log(result);
         console.error("❌ فشل الدخول:", result);
 
-    error.value=result.message.error
+    error.value=result.message
 
 
     // يمكنك عرض الخطأ في alert أو رسالة تحت الزر

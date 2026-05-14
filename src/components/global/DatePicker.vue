@@ -17,6 +17,7 @@ import { Arabic } from "flatpickr/dist/l10n/ar.js"
 
 /* ================= props ================= */
 const props = defineProps({
+    Id: { type: Number, default: 20 },
   name: { type: String, required: true },
   modelValue: { type: String, default: "" },
   minAge: { type: Number, default: 12 },
@@ -24,6 +25,7 @@ const props = defineProps({
   optional: { type: Boolean, default: false },
   required: { type: Boolean, default: false },
   localerror: { type: Boolean, default: false }
+
 })
 
 /* ================= emits ================= */

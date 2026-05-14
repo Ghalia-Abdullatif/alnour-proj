@@ -12,11 +12,12 @@ import AdminRegistration from '../views/dashboard/admin/AdminRegistration.vue'
 
 // صفحات الداشبورد
 import UsersLog from'@/views/dashboard/viewUsers.vue'
-import selectProgram from '../views/registration/SelectProgram.vue'
-import RegisterPage from '../views/registration/RegisterPage.vue'
+import selectProgram from '@/views/registration/ProgramSelection.vue'
+import RegisterPage from '@/views/registration/RegisterPage.vue'
 
 import groups from '../views/dashboard/supervisor/ViewGroups.vue'
 import NotFound from '../views/NotFound.vue'
+import successPage from '@/views/registration/RegistrationSuccess.vue'
 
 const routes = [
   //2 تسجيل الدخول واعادة كلمة المرور واختيار دور الجلسة والتحقق المزدوج للادمن
@@ -192,8 +193,14 @@ const routes = [
   },
    {
       path: '/SelectProgram',
-      name: 'programsRegester',
+      name: 'ProgramSelection',
       component:selectProgram
+    },
+    
+     {
+      path: '/SuccesRegester',
+      name: 'SuccesRegester',
+      component:successPage
     },
   {
     path: '/:pathMatch(.*)*',

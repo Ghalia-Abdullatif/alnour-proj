@@ -7,6 +7,8 @@
 
     <form class="form-otp">
       <OtpInput :length="codeLength" v-model="otpCode" @complete="onOtpComplete" />
+              <p class="error-text w-full text-center" v-show="error">{{ error }}</p>
+
 
       <BaseButton 
         :loading="loading"
@@ -46,11 +48,13 @@ const props = defineProps({
 const requires2FA = ref(true);
 const otpCode = ref('');
 const loading = ref(false);
+const error = ref('');
 
 const onOtpComplete = (code) => {
   console.log("الرمز اكتمل تلقائياً:", code);
   // اختياري: يمكنك تفعيل التحقق التلقائي هنا
-  // verifyCode(); 
+  // verifyCode();
+  verifyCode()
 };
 
 const verifyCode = async () => {
@@ -76,6 +80,7 @@ const verifyCode = async () => {
       // router.replace({ name: 'Dashboard' }); // التوجيه للداشبورد
     } else {
       console.error("❌ فشل التحقق:", result.message);
+      error.value=result.message;
       // يمكنك هنا إظهار رسالة خطأ للمستخدم
     }
   } catch (err) {
