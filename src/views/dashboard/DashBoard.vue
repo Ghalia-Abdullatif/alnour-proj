@@ -125,12 +125,25 @@ if(result.success){
 
       <nav class="sidebar-nav custom-scrollbar m-1">
         <div class="menu-label">الإعدادات</div>
-        <router-link
+        <!-- <router-link
           v-for="item in sidebarMenu"
           :key="item.path"
           :to="item.path"
           @click="isMenuOpen = false"
+        > -->
+        <router-link
+          v-for="item in sidebarMenu"
+          :key="item.id" 
+  :to="{ name: item.nameRouter }"
+         
+          @click="isMenuOpen = false"
         >
+             <!-- <router-link
+  v-for="item in bottomNavMenu"
+  :key="item.id" 
+  :to="{ name: item.nameRouter }"
+  class="bottom-nav-link"
+> -->
           <div
             :class="[
               'nav-item',
@@ -185,11 +198,11 @@ if(result.success){
 
     <nav class="bottom-nav">
       <router-link
-        v-for="item in bottomNavMenu"
-        :key="item.path"
-        :to="item.path"
-        class="bottom-nav-link"
-      >
+  v-for="item in bottomNavMenu"
+  :key="item.id" 
+  :to="{ name: item.nameRouter }"
+  class="bottom-nav-link"
+>
         <div
           :class="[
             'nav-content',

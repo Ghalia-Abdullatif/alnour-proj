@@ -599,7 +599,7 @@ input:checked + .slider:before { @apply translate-x-5; }
               <td class="td-style text-center">
                 <div class="flex justify-center gap-2">
                   <button class="action-btn edit" @click="editUser(user)" title="تعديل"><i class="fa fa-pencil"></i></button>
-                  <button class="action-btn delete" @click="deleteUser(user)" title="حذف"><i class="fa fa-trash"></i></button>
+                  <button class="action-btn delete" @click="confirmDeleteUser(user)" title="حذف"><i class="fa fa-trash"></i></button>
                 </div>
               </td>
 
@@ -652,7 +652,7 @@ input:checked + .slider:before { @apply translate-x-5; }
     </template>
   </GenericAdminLayout>
    <div  v-if="isPersonModalOpen" class=" p-4 fixed inset-0 z-[180] h-screen flex items-center justify-center bg-black/60 backdrop-blur-sm " @click="isPersonModalOpen = false">
-  <div class=" w-fit  flex items-center justify-center  h-fit overflow-y-auto custom-scrollbar"> 
+  <div class=" w-fit  flex items-center justify-center  h-fit overflow-y-auto custom-scrollbar" @click.stop> 
     <!-- <AddPerson 
       :puttonLabel="personModalMode === 'edit' ? 'تحديث البيانات' : 'إضافة عضو'"
       :initFormData="selectedUser"
@@ -660,12 +660,13 @@ input:checked + .slider:before { @apply translate-x-5; }
       @cancel="isPersonModalOpen = false"
     > -->
       <AddPerson puttonLabel="ارسال"
+       :initFormData="selectedUser"
         @cancel="isPersonModalOpen = false"
        @supmit="(e)=>handlePersonSubmit(e.message)" 
 >
 
       <template #top>
-        <div class="flex justify-between items-center mb-6">
+        <div class="flex justify-center items-center mb-6">
            <h2 class="text-xl font-black text-blue-700">
             {{ personModalMode === 'edit' ? 'تعديل بيانات العضو' : 'إضافة عضو جديد للمقرأة' }}
           </h2>
@@ -787,15 +788,18 @@ const editUser = (user) => {
     thirdName: user.third_name,
     fourthName: user.fourth_name,
     birthDate: user.birth_date,
-    country: user.country.id, // نرسل الـ ID حسب طلب الـ API
+    country:   {"id": "SD", "value": "السودان", "icon": "sd", "dialCode": "+249"}, // نرسل الـ ID حسب طلب الـ API
     email: user.accountDetails?.email || "",
     phone: user.phone_number,
     telegram: user.telegram_id,
   };
+ console.log("هاند ادد بيرسون",selectedUser.value,"dateee", user.birth_date)
+
+
   isPersonModalOpen.value = true;
 };
 const handlePersonSubmit = async (payload) => {
-  console.log("هاند ادد بيرسون")
+-  console.log("هاند ادد بيرسون")
   const data = payload; // البيانات القادمة من المكون
   
   // تجهيز الكائن بالشكل الذي يطلبه الـ API (mapping)
@@ -812,8 +816,10 @@ const handlePersonSubmit = async (payload) => {
   };
 
   try {
+    console.log(personModalMode.value ,"mooood")
     let result;
     if (personModalMode.value === 'edit') {
+      console.log( selectedUser.value.id,"uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu")
 
       result = await pepoleStore.updatePerson(selectedUser.value.id, apiData);
     } else {
@@ -821,7 +827,7 @@ const handlePersonSubmit = async (payload) => {
       result = await pepoleStore.createPerson(apiData);
     }
 
-    if (result) {
+    if (result.success) {
       showToast(personModalMode.value === 'edit' ? "تم تحديث البيانات بنجاح" : "تم إضافة العضو بنجاح");
       isPersonModalOpen.value = false;
       await refreshData();
@@ -846,7 +852,8 @@ const executeAction = async () => {
 
       showToast("تم سحب الصلاحية بنجاح");
     } else if (actionType === 'DELETE_USER') {
-      // await pepoleStore.deleteUser(id); // مثال
+      await pepoleStore.deletePerson(id); // مثال
+       isConfirmOpen.value = false;
       showToast("تم حذف العضو بنجاح");
     }
     await refreshData();

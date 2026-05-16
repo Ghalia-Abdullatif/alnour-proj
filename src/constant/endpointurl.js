@@ -162,6 +162,15 @@ export const endpoint = {
       url: `${baseurl}people/persons/`, // إنشاء شخص جديد في النظام (بياناته الشخصية فقط، بدون حساب دخول)
       method: "POST",
     },
+     updatePerson: {
+      url: `${baseurl}people/persons/`, // تعديل بيانات شخص  في النظام (بياناته الشخصية فقط، بدون حساب دخول)
+      method:  "PUT",
+    },//DELETE
+    deletePerson: {
+      url: `${baseurl}people/persons/`, // تعديل بيانات شخص  في النظام (بياناته الشخصية فقط، بدون حساب دخول)
+      method:  "DELETE",
+    },
+
     createAccount: {
       url: `${baseurl}accounts/register/`, // إنشاء حساب مستخدم جديد وربطه بشخص موجود
       method: "POST",

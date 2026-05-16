@@ -11,7 +11,7 @@ import AdminLayout from '../views/dashboard/admin/AdminHome.vue'
 import AdminRegistration from '../views/dashboard/admin/AdminRegistration.vue'
 
 // صفحات الداشبورد
-import UsersLog from'@/views/dashboard/viewUsers.vue'
+import UsersLog from'@/views/dashboard/ViewUsers.vue'
 import selectProgram from '@/views/registration/ProgramSelection.vue'
 import RegisterPage from '@/views/registration/RegisterPage.vue'
 
@@ -78,7 +78,7 @@ const routes = [
       // لوحة التحكم للادمن
       {
         path: 'admin',
-        redirect: '/Dashboard/admin/AdminCourses.vue',
+        redirect: '/Dashboard/admin/courses',
 
         meta: { roles: ['admin', 'superadmin'] }, // أدوار مسموحة
         children: [

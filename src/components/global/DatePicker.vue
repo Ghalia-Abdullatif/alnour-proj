@@ -20,8 +20,8 @@ const props = defineProps({
     Id: { type: Number, default: 20 },
   name: { type: String, required: true },
   modelValue: { type: String, default: "" },
-  minAge: { type: Number, default: 12 },
-  maxAge: { type: Number, default: 20 },
+  minAge: { type: Number, default: 1 },   // السماح من عمر سنة
+  maxAge: { type: Number, default: 100 }, // السماح حتى عمر 100 سنة
   optional: { type: Boolean, default: false },
   required: { type: Boolean, default: false },
   localerror: { type: Boolean, default: false }

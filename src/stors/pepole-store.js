@@ -216,8 +216,67 @@ getUsersWithRoles(state) {
             } finally {
               this.loading = false;
             }
-    }
+    },
+    //تعديل بيانات المستخدم
+    async updatePerson(PersonId,personData){
+    this.loading = true;
+            this.error = null;
+                          console.log("update account with data:pepooole", personData,"personId",PersonId);
+
+            try {
+              console.log("Updating account with data:pepooole", personData);
+              console.log(endpoint.pepole.updatePerson, "Endpoint details");
+              const { url, method } = endpoint.pepole.updatePerson; 
+                    const finalUrl = `${url}${PersonId}/`; 
+                  console.log(finalUrl,"final url for update person")
+              const { data, error } = await requestData(finalUrl, method, personData);
+              console.log("Response from create account API:", { data, error });
+      
+              if (data) {
+                console.log(data, "Account updated  successfully");
+                // نرجع البيانات للواجهة لمعرفة ما إذا كان يجب التوجه لصفحة الـ 2FA.
+                return { success: true, ...data };
+              }
+              this.error = error;
+              console.log(error, "Error updating account");
+              return { success: false, message: error };
+            } catch (err) {
+              return { success: false, message: "فشل الاتصال بخادم النظام." };
+            } finally {
+              this.loading = false;
+            }
+    }//deletePerson
     ,
+    
+    async deletePerson(PersonId){
+       try {
+        console.log("udeletttterl" ,endpoint.pepole.deletePerson)
+        const { url, method } = endpoint.pepole.deletePerson;
+              const finalUrl = `${url}${PersonId}/`; 
+
+
+        const { data, error } = await requestData(finalUrl , method);
+                      console.log("teest delete role");
+
+        if (data) {
+    
+                             return { success: true, ...data };
+
+            }
+              this.error = error;
+              console.log(error, "Error creating account");
+              return { success: false, message: error };
+          
+          
+          }catch (err) {
+              return { success: false, message: "فشل الاتصال بخادم النظام." };
+            } finally {
+              this.loading = false;
+            }
+          
+          },
+   
+   
     async getAllusers(){
              try {
       
@@ -342,6 +401,7 @@ const { data, error } = await requestData(finalUrl, method);
 
 
     },
+    
     //createAccount
     async createAccount(accountData){
        this.loading = true;
