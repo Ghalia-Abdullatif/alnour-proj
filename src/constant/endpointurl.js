@@ -191,4 +191,22 @@ export const endpoint = {
 
     ///accounts/activate/
   }, //end pepole
+  notifications:{
+     getAllNotifications: {
+      url: `${baseurl}notifications/`, //    ازالة دور من حساب  مستخدم
+      method: "GET",
+    },
+     creatNotifications: {
+      url: `${baseurl}notifications/`, //    ازالة دور من حساب  مستخدم
+      method: "POST",
+    },// "method": "PUT",
+     updateNotification: {
+      url: `${baseurl}notifications/`, //    ازالة دور من حساب  مستخدم
+      method: "PUT",
+    },
+     deleteNotification: {
+      url: `${baseurl}notifications/`, //    ازالة دور من حساب  مستخدم
+      method: "DELETE",
+    }
+  }
 };

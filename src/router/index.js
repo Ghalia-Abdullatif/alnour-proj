@@ -116,13 +116,13 @@ const routes = [
           {
             path: 'groups',
             name: 'AdminGroups',
-            component: () => import('../views/dashboard/admin/AdminGroups.vue'),
+            component: () => import('../views/dashboard/AdminNotifications.vue'),
             meta: { roles: ['admin'] }
           },
           {
             path: 'notifications',
             name: 'AdminNotifications',
-            component: () => import('../views/dashboard/admin/AdminNotifications.vue'),
+            component: () => import('../views/dashboard/AdminNotifications.vue'),
             meta: { roles: ['admin', 'superadmin'] }
           }
         ]

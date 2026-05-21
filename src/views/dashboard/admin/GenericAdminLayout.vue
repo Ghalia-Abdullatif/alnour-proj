@@ -1,6 +1,8 @@
+
 <template>
   <div class="main-container" dir="rtl">
     
+    <!-- التبويبات العلوية -->
     <nav v-if="filterTabs?.length && !selectedItem" class="tabs-nav">
       <button 
         v-for="tab in filterTabs" 
@@ -12,9 +14,13 @@
       </button>
     </nav>
 
+    <!-- الهيدر الرئيسي (العنوان وزر الإضافة فقط) -->
     <div v-if="!selectedItem" class="header-section">
       <div class="header-text">
-        <h1 class="title">{{ title }}</h1>
+        <h2 class="title">
+          <span class="title-indicator"></span>
+          {{ title }}
+        </h2>
         <p class="description">{{ description }}</p>
       </div>
 
@@ -26,16 +32,32 @@
       </div>
     </div>
 
+    <!-- مساحة الوجت الإضافية -->
     <div v-if="$slots['top-widgets']" class="widgets-area">
       <slot name="top-widgets"></slot>
     </div>
 
+    <!-- بار البحث: متموضع فوق كرت الجدول مباشرة وخلفيته متناسقة -->
+    <div v-if="!selectedItem" class="search-bar-row">
+      <div class="search-wrapper">
+        <span class="search-icon">🔍</span>
+        <input 
+          type="text" 
+          :value="searchQuery"
+          @input="$emit('update:searchQuery', $event.target.value)"
+          placeholder="ابحثي باسم المستخدم، البريد الإلكتروني أو أي تفاصيل أخرى..." 
+          class="search-input"
+        />
+      </div>
+    </div>
+
+    <!-- منطقة عرض الجدول أو التفاصيل -->
     <div class="content-area">
       <Transition name="fade-slide" mode="out-in">
         
         <div v-if="!selectedItem" key="table" class="table-wrapper">
-          
-          <template v-if="slots.table">
+          <!-- تعديل الفحص هنا لحل مشكلة Uncaught TypeError بنجاح -->
+          <template v-if="$slots.table">
             <slot name="table" :data="data" :columns="columns"></slot>
           </template>
 
@@ -70,6 +92,11 @@
                     </div>
                   </td>
                 </tr>
+                <tr v-if="data.length === 0">
+                  <td :colspan="columns.length + (showActions?.length ? 1 : 0)" class="text-center p-10 text-gray-400 font-medium">
+                    لا توجد بيانات تطابق البحث الحالي
+                  </td>
+                </tr>
               </tbody>
             </table>
           </div>
@@ -85,110 +112,104 @@
 </template>
 
 <script setup>
-import { useSlots } from 'vue';
-
-const slots = useSlots();
-
+// تعريف الخصائص الممررة للمكون (Props)
 defineProps({
-  // العنوان الرئيسي للصفحة (مثلاً: "إدارة المحفظين" أو "قائمة الطلاب")
-  title: String,
-
-  // وصف فرعي يظهر أسفل العنوان لشرح محتوى الصفحة
-  description: String,
-
-  // نص زر الإضافة؛ إذا تم تمريره يظهر الزر، وإذا لم يمرر تظهر القيمة الافتراضية "إضافة جديد"
-  showAddButton: { type: String, default: "إضافة جديد" },
-
-  // مصفوفة الكائنات التي تحدد أعمدة الجدول (تحتوي عادة على label و key)
-  columns: Array,
-
-  // البيانات الفعلية المراد عرضها في الجدول (التي جلبناها من الـ Store)
-  data: Array,
-
-  // مصفوفة تحتوي على التبويبات العلوية للفلترة (مثلاً: "الكل"، "نشط"، "غير نشط")
-  filterTabs: Array,
-
-  // قيمة التبويب المختار حالياً لتمييزه بصرياً عن بقية التبويبات
-  activeTab: String,
-
-  // مصفوفة تحدد العمليات المسموحة في الجدول (مثل: ['edit', 'delete'])
+  title: { type: String, default: '' },
+  description: { type: String, default: '' },
+  data: { type: Array, default: () => [] },
+  columns: { type: Array, default: () => [] },
+  searchQuery: { type: String, default: '' },
+  showAddButton: { type: String, default: '' },
   showActions: { type: Array, default: () => [] },
-
-  // الكائن الذي يحتوي على بيانات العنصر المختار عند الرغبة في عرض صفحة "التفاصيل" بدلاً من الجدول
-  selectedItem: Object
+  filterTabs: { type: Array, default: () => [] },
+  activeTab: { type: String, default: '' },
+  selectedItem: { type: Object, default: null }
 });
+
+// تعريف الأحداث المرسلة للمكون الأب (Emits)
 defineEmits([
-  // يُرسل عند النقر على زر "إضافة جديد" لفتح واجهة إدخال بيانات جديدة
-  'add-new', 
-
-  // يُرسل عند تغيير التبويب (Tab) ليقوم المكون الأب بفلترة البيانات في الـ Store
-  'tab-change', 
-
-  // يُرسل عند النقر على أي صف في الجدول (مثلاً لفتح تفاصيل المستخدم)
-  'row-click', 
-
-  // يُرسل عند النقر على أيقونة القلم لتعديل بيانات سطر معين
-  'edit', 
-
-  // يُرسل عند النقر على أيقونة السلة لحذف سجل من النظام
-  'delete', 
-
-  // يُرسل عند الرغبة في إغلاق واجهة التفاصيل والعودة لعرض الجدول الرئيسي
-  'close-details'
+  'update:searchQuery',
+  'add-new',
+  'tab-change',
+  'row-click',
+  'edit',
+  'delete'
 ]);
-// دالة للتحقق من القيم الفارغة لتنسيقها
+
+// دالة مساعدة للتحقق من القيم الفارغة في الخلايا
 const isValueEmpty = (val) => {
-  return val === 'لا توجد' || val === 'لا يوجد حساب' || val === '—' || !val;
+  return val === null || val === undefined || val === '';
 };
 </script>
 
 <style scoped>
 @reference "@/css/style.css";
 
-/* باستخدام @apply لتجميع تنسيقات Tailwind وجعل الكود أنظف */
-
 .main-container {
-  @apply p-6 bg-gray-50 min-h-screen text-right;
+  @apply p-4 md:p-8 space-y-4 text-right font-['Tajawal',_sans-serif] bg-gray-50/50 min-h-screen;
 }
 
-/* تنسيق التبويبات */
+/* التبويبات العلوبة */
 .tabs-nav {
-  @apply mb-8 flex flex-wrap gap-2 p-1 bg-gray-200/50 rounded-2xl w-fit;
+  @apply flex flex-wrap gap-2 p-1.5 bg-white border border-gray-100 rounded-full w-fit shadow-sm mb-2;
 }
 
 .tab-button {
-  @apply px-6 py-2.5 rounded-xl font-bold transition-all duration-300 text-sm;
+  @apply px-6 py-2 rounded-full font-bold transition-all duration-300 text-sm;
 }
 
 .tab-active {
-  @apply bg-white text-blue-600 shadow-sm scale-105;
+  @apply bg-[#802c2c] text-white shadow-md shadow-[#802c2c]/10 scale-105;
 }
 
 .tab-inactive {
-  @apply text-gray-500 hover:bg-gray-200;
+  @apply text-gray-500 hover:bg-gray-50 hover:text-gray-800;
 }
 
-/* تنسيق الهيدر */
+
+/* الهيدر الرئيسي */
 .header-section {
-  @apply flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4;
+  @apply flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-[2rem] border border-gray-100 shadow-sm;
 }
 
 .title {
-  @apply text-3xl font-black text-gray-900 leading-tight;
+  @apply text-xl md:text-2xl font-black text-[#802c2c] tracking-tight flex items-center gap-3;
+}
+
+.title-indicator {
+  @apply w-2.5 h-6 bg-[#802c2c] rounded-full inline-block;
 }
 
 .description {
-  @apply text-gray-500 mt-1 text-sm font-bold;
+  @apply text-gray-400 mt-1 text-xs md:text-sm font-medium mr-5;
 }
 
 .btn-primary {
-  @apply bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-2xl 
-         flex items-center gap-2 shadow-lg shadow-blue-200 transition-all;
+  @apply bg-[#802c2c] hover:bg-[#6b2323] text-white px-6 py-3 rounded-2xl 
+         flex items-center justify-center gap-2 shadow-lg shadow-[#802c2c]/10 transition-all text-sm font-bold active:scale-95 whitespace-nowrap;
 }
 
-/* تنسيق الجدول */
+/* صف حقل البحث وتنسيق الخط الواضح */
+.search-bar-row {
+  @apply w-full pt-2;
+}
+
+.search-wrapper {
+  @apply relative flex items-center bg-white border border-gray-200 rounded-2xl px-5 py-3.5 
+         focus-within:border-[#802c2c]/40 focus-within:ring-2 focus-within:ring-[#802c2c]/5 transition-all w-full shadow-sm;
+}
+
+.search-icon {
+  @apply text-gray-400 text-lg ml-3;
+}
+
+.search-input {
+  @apply bg-transparent outline-none text-base w-full text-gray-800 font-bold placeholder-gray-400/80;
+}
+
+/* كرت الجدول وبنية الخلايا */
 .table-wrapper {
-  @apply bg-white rounded-[2.5rem] shadow-xl border border-gray-100 overflow-hidden;
+  @apply bg-white rounded-[2rem] border border-gray-100 shadow-sm overflow-hidden;
 }
 
 .table-scroll {
@@ -196,47 +217,49 @@ const isValueEmpty = (val) => {
 }
 
 .data-table {
-  @apply w-full text-right;
+  @apply w-full text-right border-collapse;
+}
+
+.table-header-row {
+  @apply bg-gray-50/70 border-b border-gray-100;
 }
 
 .th-style {
-  @apply p-5 text-xs font-black text-gray-400 italic;
+  @apply p-5 text-xs font-black text-gray-400 tracking-wider;
 }
 
 .table-row {
-  @apply hover:bg-blue-50/30 transition-all cursor-pointer border-b border-gray-50 last:border-0;
+  @apply hover:bg-gray-50/50 transition-all cursor-pointer border-b border-gray-100 last:border-0;
 }
 
 .td-style {
-  @apply p-5 text-gray-700 text-xs font-bold;
+  @apply p-5 text-gray-700 text-xs md:text-sm font-medium;
 }
 
-/* العمليات */
 .actions-container {
-  @apply flex justify-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity;
+  @apply flex justify-center gap-2 md:opacity-0 group-hover:opacity-100 transition-opacity duration-200;
 }
 
 .edit-btn {
-  @apply p-2 hover:bg-blue-100 rounded-lg text-blue-600;
+  @apply p-2 hover:bg-blue-50 rounded-xl text-blue-600 transition-colors;
 }
 
 .delete-btn {
-  @apply p-2 hover:bg-red-100 rounded-lg text-red-600;
+  @apply p-2 hover:bg-red-50 rounded-xl text-red-600 transition-colors;
 }
 
-/* تنسيق النصوص الفارغة */
 .empty-text {
   @apply text-gray-400 font-normal italic;
 }
 
 /* حركات الانتقال */
 .fade-slide-enter-active, .fade-slide-leave-active { 
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
 }
 .fade-slide-enter-from { 
-  opacity: 0; transform: translateY(20px); 
+  opacity: 0; transform: translateY(10px); 
 }
 .fade-slide-leave-to { 
-  opacity: 0; transform: translateY(-20px); 
+  opacity: 0; transform: translateY(-10px); 
 }
 </style>

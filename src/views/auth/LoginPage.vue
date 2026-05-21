@@ -5,7 +5,7 @@
     <div class="auth-card">
       <div class="flex flex-col items-center justify-center mb-8">
         <div
-          class="w-24 h-24 rounded-full shadow-lg flex items-center justify-center mb-4 bg-background"
+          class="w-24 h-24 rounded-full shadow-lg flex items-center justify-center mb-8 bg-background"
         >
           <img
             src="/assets/logos/logo.png"

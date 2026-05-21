@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 import { isMobile } from "../../../utils/useBreakpoints";
+import { useNotifcationStore } from "@/stors/pepole-store.js";
 
 // 1. سجل الإشعارات المرسلة (History)
 const notifications = ref([
@@ -11,28 +12,29 @@ const notifications = ref([
 // 2. حالات التحكم بالنموذج
 const isSendModalOpen = ref(false)
 const newNotification = ref({
-  title: '',
-  message: '',
-  target: 'الكل'
+  title: 'تجربة',
+  message: 'اشعار بخصوص  اقتراب الامتحانات',
+  is_broadcast: false,
+  roles:[2, 3]
 })
 
 // 3. العمليات (Actions)
 const sendNotification = () => {
-  if (newNotification.value.title && newNotification.value.message) {
-    // إضافة الإشعار الجديد في مقدمة المصفوفة
-    notifications.value.unshift({
-      id: Date.now(),
-      title: newNotification.value.title,
-      target: newNotification.value.target,
-      date: new Date().toISOString().split('T')[0], // تنسيق التاريخ YYYY-MM-DD
-      status: 'تم الإرسال'
-    })
+  // if (newNotification.value.title && newNotification.value.message) {
+  //   // إضافة الإشعار الجديد في مقدمة المصفوفة
+  //   notifications.value.unshift({
+  //     id: Date.now(),
+  //     title: newNotification.value.title,
+  //     target: newNotification.value.target,
+  //     date: new Date().toISOString().split('T')[0], // تنسيق التاريخ YYYY-MM-DD
+  //     status: 'تم الإرسال'
+  //   })
     
-    // إغلاق النافذة وتصفير البيانات
-    isSendModalOpen.value = false
-    alert('تم إرسال الإشعار لجميع المستهدفين بنجاح! 🔔')
-    newNotification.value = { title: '', message: '', target: 'الكل' }
-  }
+  //   // إغلاق النافذة وتصفير البيانات
+  //   isSendModalOpen.value = false
+  //   alert('تم إرسال الإشعار لجميع المستهدفين بنجاح! 🔔')
+  //   newNotification.value = { title: '', message: '', target: 'الكل' }
+  // }
 }
 </script>
 

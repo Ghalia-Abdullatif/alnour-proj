@@ -43,16 +43,16 @@ import BaseButton from "../../components/global/BaseButton.vue";
 
 defineProps({
   show: Boolean,
+  loading:{type: Boolean,default:false},
   title: { type: String, default: '' },
   message: { type: String, default: 'هل أنتِ متأكدة من الاستمرار في هذه العملية؟' }
 });
 
 const emit = defineEmits(['confirm', 'cancel']);
 
-const loading = ref(false);
 
 const handleConfirm = () => {
-  loading.value = true;
+  // loading= true;
   emit('confirm'); 
 };
 </script>

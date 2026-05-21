@@ -17,6 +17,9 @@ export const usePepoleStore = defineStore("pepole", {
     storage: sessionStorage, // نوع التخزين المطلوب (Session).
   },
   getters: {
+    getTotalUsersCount(state) {
+      return state.users?.length || 0;
+    },
    getUsers(state) {
   // دالة مساعدة داخلية لتحويل التاريخ (لعدم تكرار الكود)
   const formatArabicDate = (dateString) => {
@@ -96,6 +99,11 @@ export const usePepoleStore = defineStore("pepole", {
 //       };
 //     });
 //   }
+getRoles(state){
+return  state.allRoles;
+  
+
+},
 
 getUsersWithRoles(state) {
 
@@ -258,7 +266,7 @@ getUsersWithRoles(state) {
         const { data, error } = await requestData(finalUrl , method);
                       console.log("teest delete role");
 
-        if (data) {
+        if (!error) {
     
                              return { success: true, ...data };
 
@@ -438,7 +446,7 @@ const { data, error } = await requestData(finalUrl, method);
         const { data, error } = await requestData(finalUrl , method);
                       console.log("teest delete role");
 
-        if (data) {
+        if (!error) {
     
                              return { success: true, ...data };
 
