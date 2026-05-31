@@ -3,7 +3,7 @@
   <div class="main-container" dir="rtl">
     
     <!-- التبويبات العلوية -->
-    <nav v-if="filterTabs?.length && !selectedItem" class="tabs-nav">
+    <nav v-if="filterTabs?.length && !selectedItem" class="tabs-nav custom-scrollbar">
       <button 
         v-for="tab in filterTabs" 
         :key="tab.value"
@@ -55,7 +55,7 @@
     <div class="content-area">
       <Transition name="fade-slide" mode="out-in">
         
-        <div v-if="!selectedItem" key="table" class="table-wrapper">
+        <div v-if="!selectedItem" key="table" class="table-wrapper custom-scrollbar">
           <!-- تعديل الفحص هنا لحل مشكلة Uncaught TypeError بنجاح -->
           <template v-if="$slots.table">
             <slot name="table" :data="data" :columns="columns"></slot>
@@ -146,12 +146,14 @@ const isValueEmpty = (val) => {
 @reference "@/css/style.css";
 
 .main-container {
-  @apply p-4 md:p-8 space-y-4 text-right font-['Tajawal',_sans-serif] bg-gray-50/50 min-h-screen;
+  @apply space-y-4 text-right font-['Tajawal',_sans-serif] bg-gray-50/50 min-h-screen;
 }
 
 /* التبويبات العلوبة */
 .tabs-nav {
-  @apply flex flex-wrap gap-2 p-1.5 bg-white border border-gray-100 rounded-full w-fit shadow-sm mb-2;
+  @apply  sticky   flex gap-2 p-1.5 bg-white border border-gray-100 rounded-full shadow-sm mb-2 overflow-x-auto whitespace-nowrap;
+  max-width: 100%;
+  -webkit-overflow-scrolling: touch;
 }
 
 .tab-button {
@@ -213,7 +215,7 @@ const isValueEmpty = (val) => {
 }
 
 .table-scroll {
-  @apply overflow-x-auto;
+  @apply overflow-x-auto ;
 }
 
 .data-table {

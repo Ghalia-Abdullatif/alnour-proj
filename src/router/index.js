@@ -14,6 +14,7 @@ import AdminRegistration from '../views/dashboard/admin/AdminRegistration.vue'
 import UsersLog from'@/views/dashboard/ViewUsers.vue'
 import selectProgram from '@/views/registration/ProgramSelection.vue'
 import RegisterPage from '@/views/registration/RegisterPage.vue'
+import courses from '@/views/ViewCourses.vue'
 
 import groups from '../views/dashboard/supervisor/ViewGroups.vue'
 import NotFound from '../views/NotFound.vue'
@@ -62,7 +63,8 @@ const routes = [
   
   {
     path: '/',
-    redirect: '/Dashboard'
+    redirect: '/auth/login'
+
   },
   {
     path: '/Dashboard',
@@ -92,7 +94,7 @@ const routes = [
           {
             path: 'courses',
             name: 'AdminCourses',
-            component: () => import('../views/dashboard/admin/AdminCourses.vue'),
+            component: courses,
             meta: { roles: ['admin', 'superadmin'] }
           },
           {

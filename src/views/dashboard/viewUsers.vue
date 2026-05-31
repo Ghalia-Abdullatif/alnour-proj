@@ -1,7 +1,7 @@
 <template>
   <GenericAdminLayout
     title="إدارة أعضاء المقرأة"
-    description="نظرة عامة شاملة على بيانات الطلاب والمعلمين وحساباتهم التقنية وصلاحياتهم"
+    description="نظرة عامة  على بيانات الطلاب والمعلمين والمشرفين وحساباتهم  وصلاحياتهم"
     :columns="userColumns"
     showAddButton="إضافة عضو جديد"
     @add-new="openAddPersonModal"
@@ -524,13 +524,13 @@ const showToast = (msg) => {
 }
 
 .td-style { @apply p-5 align-top; }
-
+/* 
 .custom-scrollbar::-webkit-scrollbar { height: 6px; }
 .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
 .custom-scrollbar::-webkit-scrollbar-thumb { 
   background: linear-gradient(180deg, var(--color-primary), #983A3A);
   border-radius: 10px; 
-}
+} */
 
 .loading-wrapper { @apply flex flex-col items-center justify-center py-20 gap-4; }
 .loader { 
@@ -597,7 +597,7 @@ input:checked + .slider:before { @apply translate-x-5; }
 }
 .btn-create-account:hover { background-color: var(--color-golden); color: white !important; border-color: transparent; }
 
-.roles-stack { @apply flex flex-col gap-1.5 items-start; w-full; }
+.roles-stack { @apply flex flex-col gap-1.5 items-start w-full; }
 .role-chip { 
   @apply flex items-center justify-between border px-3 py-1.5 rounded-xl text-[11px] font-bold transition-all hover:shadow-sm w-full;
   background-color: var(--color-card); border-color: var(--color-primaryh); color: var(--color-text-gray); 

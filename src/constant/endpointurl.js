@@ -208,5 +208,66 @@ export const endpoint = {
       url: `${baseurl}notifications/`, //    ازالة دور من حساب  مستخدم
       method: "DELETE",
     }
+  },
+  //////////
+  
+  // ... بقية الأقسام الأخرى (notifications, people...)
+  
+  programs: {
+    getAllPrograms: {
+      url: `${baseurl}programs/programs/`,
+      method: "GET",
+    },
+    createProgram: {
+      url: `${baseurl}rograms/programs/`,
+      method: "POST",
+    },
+    updateProgram: {
+      url: `${baseurl}programs/programs/`, // سيتم إلحاق الـ ID برمجياً في الـ Store
+      method: "PUT",
+    },
+    deleteProgram: {
+      url: `${baseurl}programs/programs/`, // سيتم إلحاق الـ ID برمجياً في الـ Store
+      method: "DELETE",
+    }
+  },
+  batches: {
+    // روابط الدفعات الأساسية
+    getAllBatches: {
+      url: `${baseurl}batches/`,
+      method: "GET",
+    },
+    createBatch: {
+      url: `${baseurl}batches/`,
+      method: "POST",
+    },
+    updateBatch: {
+      url: `${baseurl}batches/`, // سيتم إلحاق الـ ID برمجياً في الـ Store
+      method: "PUT",
+    },
+    deleteBatch: {
+      url: `${baseurl}batches/`, // سيتم إلحاق الـ ID برمجياً في الـ Store
+      method: "DELETE",
+    },
+    getStatus:{
+      url:`${baseurl}batch-statuses/`,
+      method:"GET"
+    },
+    addStatus:{
+      url:`${baseurl}batch-statuses/`,
+      method:"PUT"
+    },
+    deleteStatus:{
+      url:`${baseurl}batch-statuses/{id}`,
+      method:"DELETE"
+    },
+     updateStatus:{
+      url:`${baseurl}batch-statuses/{id}`,
+      method:"PUT"
+    },
+
   }
-};
+  
+  };
+
+

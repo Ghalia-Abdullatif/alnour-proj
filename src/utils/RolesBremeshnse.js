@@ -326,7 +326,7 @@ export const premitinMenu = [
  * يحدد المعرفات (IDs) المسموح للمدير بالوصول إليها، مع تحديد العناصر الأساسية عبر (isPrimary: true).
  */
 export const Adminpremion = [
-  { id: "MangeProfile", isPrimary: false },
+  // { id: "MangeProfile", isPrimary: false },
   { id: "MangeGroups", isPrimary: false },
   { id: "MangeReport", isPrimary: true },
   { id: "MangeBatches", isPrimary: true },
@@ -341,7 +341,7 @@ export const Adminpremion = [
  * يحد من بعض الصفحات الحساسة (مثل إدارة مستخدمي النظام بأكمله MangeUsers) مقارنة بصلاحيات الأدمن.
  */
 export const GroupSuperVisorpremion = [
-  { id: "MangeProfile", isPrimary: false },
+  // { id: "MangeProfile", isPrimary: false },
   { id: "MangeGroups", isPrimary: false },
   { id: "MangeReport", isPrimary: true },
   { id: "MangeBatches", isPrimary: true },
