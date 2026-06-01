@@ -290,13 +290,20 @@ export const premitinMenu = [
     path: "/Dashboard/admin/reports",
     icon: "fas fa-chart-line",
   },
+  // {
+  //   id: "MangeBatches",
+  //   name: "الدفعات",
+  //   nameRouter: "SupervisorBatches", // مطابق لـ name: 'AdminBatches' المعرف في الراوتر
+  //   path: "courses/:courseId/batches",
+  //   icon: "fas fa-layer-group",
+  // }
   {
-    id: "MangeBatches",
-    name: "الدفعات",
-    nameRouter: "AdminBatches", // مطابق لـ name: 'AdminBatches' المعرف في الراوتر
-    path: "/Dashboard/admin/batches",
-    icon: "fas fa-layer-group",
-  },
+  id: "MangeBatches",
+  name: "الدفعات",
+  nameRouter: "SupervisorBatches", 
+  path: "/Dashboard/supervisor/courses/batches", // مسار نظيف وآمن للقائمة الجانبية
+  icon: "fas fa-layer-group",
+},
   {
     id: "MangeGroups",
     name: "المجموعات",
@@ -331,7 +338,7 @@ export const Adminpremion = [
   { id: "MangeReport", isPrimary: true },
   { id: "MangeBatches", isPrimary: true },
   { id: "MangeCourses", isPrimary: true },
-  { id: "MangeRegistration", isPrimary: true },
+  // { id: "MangeRegistration", isPrimary: true },
   { id: "MangeUsers", isPrimary: false },
 ];
 

@@ -215,7 +215,7 @@ export const useBatchStore = defineStore("batch", {
     async deleteBatch(batchId) {
       this.loading = true;
       try {
-        const { url, method } = endpoint.batch.deleteBatch;
+        const { url, method } = endpoint.batches.deleteBatch;
         const finalUrl = `${url}${batchId}/`;
         const { data, error } = await requestData(finalUrl, method);
 

@@ -11,7 +11,7 @@
           <span class="w-2.5 h-6 bg-[#802c2c] rounded-full inline-block"></span>
           مركز بث الإشعارات
         </h2>
-        <p class="text-xs md:text-sm text-gray-500 font-medium mt-1">بث الرسائل، التنبيهات والتوجيهات الفورية عبر النظام</p>
+        <p class="text-xs md:text-sm text-gray-500 font-medium mt-1">بث  التنبيهات والتوجيهات  عبر النظام</p>
       </div>
       <button 
         @click="openCreateModal" 
@@ -142,7 +142,7 @@
             </div>
             <div>
               <h3 class="font-black text-lg text-gray-800">{{ isEditing ? 'تعديل وتحديث التنبيه' : 'بث تنبيه جديد' }}</h3>
-              <p class="text-[11px] text-gray-400 mt-0.5">سيتم تسجيل البيانات في قاعدة البيانات وبثها فوراً</p>
+              <p class="text-[11px] text-gray-400 mt-0.5">سيتم تسجيل البيانات في قاعدة البيانات وبثها </p>
             </div>
           </div>
           <button @click="handleCloseModal" class="text-gray-400 hover:text-gray-600 p-1.5 rounded-lg">

@@ -266,7 +266,131 @@ export const endpoint = {
       method:"PUT"
     },
 
-  }
+  },
+  // --- روابط إدارة المجموعات والطلاب التابعين لها (Groups & Group Students) ---
+  groups: {
+    // جلب كافة المجموعات أو إنشائها
+    getAllGroups: {
+      url: `${baseurl}groups/`,
+      method: "GET",
+    },
+    createGroup: {
+      url: `${baseurl}groups/`,
+      method: "POST",
+    },
+    // العمليات المعتمدة على معرّف المجموعة المحددة (id)
+    getGroupById: {
+      url: `${baseurl}groups/`, // سيتم إلحاق الـ id/ برمجياً في الـ Store
+      method: "GET",
+    },
+    updateGroup: {
+      url: `${baseurl}groups/`, // سيتم إلحاق الـ id/ برمجياً في الـ Store
+      method: "PUT",
+    },
+    patchGroup: {
+      url: `${baseurl}groups/`, // سيتم إلحاق الـ id/ برمجياً في الـ Store
+      method: "PATCH",
+    },
+    deleteGroup: {
+      url: `${baseurl}groups/`, // سيتم إلحاق الـ id/ برمجياً في الـ Store
+      method: "DELETE",
+    },
+
+    // --- تسكين وإدارة الطالبات داخل المجموعات (Group-Student Assignments) ---
+    getGroupStudents: {
+      url: `${baseurl}groups/group-students/`, // جلب سجلات توزيع الطالبات على المجموعات
+      method: "GET",
+    },
+    addStudentToGroup: {
+      url: `${baseurl}groups/group-students/`, // ربط طالبة بمجموعة محددة
+      method: "POST",
+    },
+    // العمليات التفصيلية على طالبة معينة داخل مجموعة بواسطة معرف السجل (id)
+    getGroupStudentDetail: {
+      url: `${baseurl}groups/group-students/`, // سيتم إلحاق الـ id/ برمجياً
+      method: "GET",
+    },
+    updateGroupStudent: {
+      url: `${baseurl}groups/group-students/`, // سيتم إلحاق الـ id/ برمجياً
+      method: "PUT",
+    },
+    removeStudentFromGroup: {
+      url: `${baseurl}groups/group-students/`, // سيتم إلحاق الـ id/ برمجياً لحذف السجل
+      method: "DELETE",
+    }
+  },
+  // --- روابط نظام التقارير الديناميكي وسير العمل (Dynamic Reports Workflow) ---
+  reports: {
+    // ========================================================
+    // [الصفحة 1]: خاصة بالأدمن (إنشاء وإدارة القوالب والأسئلة وتوجيهها)
+    // ========================================================
+    
+    // إدارة قوالب التقارير الهيكلية (إنشاء / جلب)
+    getAllTemplates: {
+      url: `${baseurl}reports/report-templates/`,
+      method: "GET",
+    },
+    createTemplate: {
+      url: `${baseurl}reports/report-templates/`,
+      method: "POST",
+    },
+
+    // بناء وهيكلة الأسئلة التابعة للقوالب
+    createTemplateQuestion: {
+      url: `${baseurl}reports/template-questions/`,
+      method: "POST",
+    },
+
+    // إضافة الخيارات المتاحة للأسئلة الاختيارية (مثل: ممتاز، جيد، ضعيف)
+    createQuestionChoice: {
+      url: `${baseurl}reports/question-choices/`,
+      method: "POST",
+    },
+
+    // توجيه وإنشاء نسخة تقرير فعلية مربوطة بمجموعة وتاريخ محدد
+    createGroupReportInstance: {
+      url: `${baseurl}reports/reports/`,
+      method: "POST",
+    },
+
+    // تعيين وإرسال التقرير لمستلمين محددين (مشرفي المجموعات أو الدفعات)
+    sendReportToRecipients: {
+      url: `${baseurl}reports/send_report/`,
+      method: "POST",
+    },
+
+    // ========================================================
+    // [الصفحة 2]: خاصة بالمشرف (استعراض التقارير الموجهة إليه وتعبئتها)
+    // ========================================================
+    
+    // جلب التقارير الموجهة للمستخدم الحالي ليتولى تعبئتها بناءً على دوره
+    getAssignedReports: {
+      url: `${baseurl}reports/reports/`, // يمكن للـ Store تصفيتها أو تمرير كويري بارامترز
+      method: "GET",
+    },
+
+    // إرسال وحفظ إجابات المشرف على أسئلة التقرير بشكل نهائي بالسيرفر
+    submitReportAnswers: {
+      url: `${baseurl}reports/submit_answers/`,
+      method: "POST",
+    },
+
+    // ========================================================
+    // [الصفحة 3]: شاشة العرض العام واستعراض البيانات الفعلية والأحداث
+    // ========================================================
+    
+    // جلب تفاصيل تقرير معين مع الأسئلة والإجابات الملحقة به برمجياً عبر الـ ID
+    getReportDetails: {
+      url: `${baseurl}reports/reports/`, // سيتم إلحاق الـ ${reportId}/ ديناميكياً بالـ Store
+      method: "GET",
+    },
+
+    // جلب سجل الأحداث والتنبيهات التاريخية الخاصة بالتقارير (Logs / Events)
+    getReportEvents: {
+      url: `${baseurl}reports/report-events/`,
+      method: "GET",
+    }
+  },
   
   };
 

@@ -45,7 +45,7 @@
           type="text" 
           :value="searchQuery"
           @input="$emit('update:searchQuery', $event.target.value)"
-          placeholder="ابحثي باسم المستخدم، البريد الإلكتروني أو أي تفاصيل أخرى..." 
+          placeholder="ابحث" 
           class="search-input"
         />
       </div>

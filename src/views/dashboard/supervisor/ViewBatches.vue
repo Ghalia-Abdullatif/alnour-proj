@@ -28,38 +28,36 @@
             <label class="block text-[11px] font-black text-gray-400 mb-1.5">المستوى الدراسي</label>
             <select v-model="filterLevel" class="w-full p-2.5 bg-[var(--color-background)] border border-gray-200 rounded-xl text-sm font-bold outline-none focus:border-amber-700 transition-all">
               <option value="">كل المستويات الدراسية</option>
-              <option value="المستوى الأول">المستوى الأول</option>
-              <option value="المستوى الثاني">المستوى الثاني</option>
-              <option value="المستوى الثالث">المستوى الثالث</option>
+              <option value="الأول">المستوى الأول</option>
+              <option value="الثاني">المستوى الثاني</option>
+              <option value="الثالث">المستوى الثالث</option>
             </select>
           </div>
         </div>
       </template>
 
       <template #table="{ data }">
-        <div v-if="isLoading || isPeopleLoading" class="flex flex-col items-center justify-center py-20 bg-white rounded-3xl border border-gray-100 shadow-sm">
+        <div v-if="isLoading || isPeopleLoading || programStore.loading" class="flex flex-col items-center justify-center py-20 bg-white rounded-3xl border border-gray-100 shadow-sm">
           <div class="animate-spin rounded-full h-10 w-10 border-4 border-t-transparent border-[var(--color-primary)]"></div>
-          <p class="text-basicGray text-sm mt-4 font-bold">جاري مزامنة مخازن الدفعات والأدوار من خادم النظام ...</p>
+          <p class="text-basicGray text-sm mt-4 font-bold">جاري مزامنة مخازن الدفعات والمساقات من خادم النظام ...</p>
         </div>
 
         <div v-else-if="!data || data.length === 0" class="text-center py-20 bg-white rounded-3xl border-2 border-dashed border-gray-100">
           <i class="fas fa-folder-open text-gray-300 text-4xl mb-3"></i>
-          <p class="text-basicGray text-sm font-medium">لا توجد دفعات تعليمية مطابقة لشروط الفلترة أو مصفوفة المساقات المحددة حالياً.</p>
+          <p class="text-basicGray text-sm font-medium">لا توجد دفعات تعليمية مطابقة لشروط الفلترة الحالية.</p>
         </div>
 
         <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <div v-for="batch in data" :key="batch.id" class="bg-white rounded-[2rem] border border-gray-100 p-6 shadow-sm border-t-4 border-t-[var(--color-primary)] flex flex-col justify-between hover:-translate-y-1 hover:shadow-md transition-all duration-300">
             <div>
               <div class="flex justify-between items-start gap-2 mb-3">
-                <h3 class="text-sm font-black text-gray-800 line-clamp-1" :title="batch.name">{{ batch.name || 'دفعة بدون اسم' }}</h3>
+                <h3 class="text-base font-black text-gray-800 line-clamp-1">
+                  مساق {{ batch.program_name || getProgramNameFromStore(batch.program) }}
+                </h3>
                 <span class="bg-amber-50 text-amber-800 px-2.5 py-1 rounded-xl text-xs font-mono font-black border border-amber-100/50">
-                  {{ batch.code || '—' }}
+                  ID: {{ batch.id }}
                 </span>
               </div>
-              
-              <p class="text-xs text-gray-400 font-bold mb-4">
-                <i class="fas fa-circle-notch text-[9px] text-amber-600 ml-1"></i> المستهدف الحالي: {{ batch.num_group || 0 }} حلقة تعليمية
-              </p>
               
               <div class="space-y-3 border-t border-b border-gray-50 py-4 my-4 text-xs text-text-gray">
                 <div class="flex justify-between items-center">
@@ -68,17 +66,24 @@
                 </div>
                 <div class="flex justify-between items-center">
                   <span class="text-gray-400 font-medium"><i class="fas fa-layer-group ml-1.5 text-xs text-gray-400"></i> المستوى الدراسي:</span>
-                  <span class="font-bold bg-gray-50 px-2.5 py-1 rounded-xl text-gray-600 border border-gray-100">{{ batch.current_level || 'غير محدد' }}</span>
-                </div>
-                <div class="flex justify-between items-center">
-                  <span class="text-gray-400 font-medium"><i class="fas fa-toggle-on ml-1.5 text-xs text-gray-400"></i> حالة الدفعة الحالية:</span>
-                  <span class="px-3 py-1 rounded-full text-[11px] font-black bg-emerald-50 text-emerald-700 border border-emerald-100">
-                    {{ batch.statusName }}
+                  <span class="font-bold bg-gray-50 px-2.5 py-1 rounded-xl text-gray-600 border border-gray-100">
+                    المستوى {{ batch.current_level || 'غير محدد' }}
                   </span>
                 </div>
-                <div class="flex justify-between text-[11px] text-gray-400 pt-2 border-t border-dashed border-gray-100 font-medium">
-                  <span>البدء: {{ batch.formattedStartDate || 'غير محدد' }}</span>
-                  <span>الانتهاء: {{ batch.formattedEndDate || 'غير محدد' }}</span>
+                <div class="flex justify-between items-center">
+                  <span class="text-gray-400 font-medium"><i class="fas fa-circle-notch ml-1.5 text-xs text-gray-400"></i> الحلقات المستهدفة:</span>
+                  <span class="font-bold text-gray-700">{{ batch.num_group || 0 }} حلقة</span>
+                </div>
+                <div class="flex justify-between items-center">
+                  <span class="text-gray-400 font-medium"><i class="fas fa-toggle-on ml-1.5 text-xs text-gray-400"></i> حالة الدفعة:</span>
+                  <span class="px-3 py-1 rounded-full text-[11px] font-black" :class="batch.status_name === 'نشطة' || batch.status === 1 ? 'bg-emerald-50 text-emerald-700 border border-emerald-100' : 'bg-gray-50 text-gray-600 border border-gray-100'">
+                    {{ batch.status_name || 'نشطة' }}
+                  </span>
+                </div>
+                
+                <div class="flex justify-between text-[11px] text-gray-400 pt-2 border-t border-dashed border-gray-100 font-medium" dir="rtl">
+                  <span>البدء: {{ batch.start_date || batch.formattedStartDate || 'غير محدد' }}</span>
+                  <span>الانتهاء: {{ batch.end_date || batch.formattedEndDate || 'غير محدد' }}</span>
                 </div>
               </div>
             </div>
@@ -89,20 +94,34 @@
               </button>
               <div class="flex gap-1.5" v-if="isAdmin">
                 <button @click="openEditModal(batch)" class="flex-1 text-xs bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center hover:bg-blue-100 transition-colors" title="تعديل الدفعة"><i class="fas fa-edit"></i></button>
-                <button @click="handleDeleteBatch(batch.id)" class="flex-1 text-xs bg-red-50 text-[var(--color-flag-red)] rounded-xl flex items-center justify-center hover:bg-red-100 transition-colors" title="حذف الدفعة"><i class="fas fa-trash-alt"></i></button>
+                <button @click="openDeleteConfirm(batch)" class="flex-1 text-xs bg-red-50 text-[var(--color-flag-red)] rounded-xl flex items-center justify-center hover:bg-red-100 transition-colors" title="حذف الدفعة"><i class="fas fa-trash-alt"></i></button>
               </div>
             </div>
           </div>
         </div>
+
+        <ConfirmModal 
+          :show="isConfirmOpen"
+          :loading="isConfirmLoading"
+          :title="confirmData.title"
+          :message="confirmData.message"
+          @confirm="executeAction"
+          @cancel="isConfirmOpen = false"
+        />
+
+        <SuccessToast 
+          :show="isToastVisible"
+          :message="toastMsg"
+          @close="isToastVisible = false"
+        />
       </template>
     </GenericAdminLayout>
 
-    <!-- مودال الإنشاء والتعديل -->
     <div v-if="isModalOpen" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[150] p-4 text-right" dir="rtl">
       <div class="bg-white w-full max-w-md rounded-[2.5rem] shadow-2xl border border-gray-50 overflow-hidden p-6 space-y-4">
         <div class="flex justify-between items-center border-b border-gray-50 pb-3">
           <h3 class="text-base font-black text-[var(--color-primary)]">
-            {{ isEditMode ? 'تعديل بيانات الدفعة الحالية' : 'إنشاء دفعة تعليمية جديدة' }}
+            {{ isEditMode ? 'تعديل بيانات الدفعة' : 'إنشاء دفعة تعليمية جديدة' }}
           </h3>
           <button @click="isModalOpen = false" class="text-gray-400 hover:text-gray-600"><i class="fas fa-times text-sm"></i></button>
         </div>
@@ -111,19 +130,15 @@
           <i class="fas fa-info-circle"></i> {{ modalValidationError }}
         </p>
 
-        <div class="space-y-1">
-          <label class="text-xs font-black text-gray-500">اسم الدفعة التعليمية *</label>
-          <input v-model="formData.name" type="text" placeholder="مثال: الدفعة الثالثة" class="w-full p-2.5 border border-gray-200 rounded-xl outline-none text-sm font-bold focus:border-amber-700 transition-all">
-        </div>
-
-        <div class="grid grid-cols-2 gap-3">
+        <div class="grid grid-cols-1 gap-3">
           <div class="space-y-1">
-            <label class="text-xs font-black text-gray-500">الرمز الفني (الكود) *</label>
-            <input v-model="formData.code" type="text" placeholder="BTCH-03" class="w-full p-2.5 border border-gray-200 rounded-xl outline-none font-mono text-sm font-bold focus:border-amber-700 transition-all">
-          </div>
-          <div class="space-y-1">
-            <label class="text-xs font-black text-gray-500">معرف المساق الدراسي *</label>
-            <input v-model="formData.program" type="number" class="w-full p-2.5 border border-gray-200 rounded-xl outline-none text-sm font-bold focus:border-amber-700 transition-all">
+            <label class="text-xs font-black text-gray-500">المساق الدراسي التابع له *</label>
+            <select v-model="formData.program" class="w-full p-2.5 border border-gray-200 rounded-xl outline-none text-sm font-bold focus:border-amber-700 transition-all">
+              <option :value="null" disabled>اختر المساق الدراسي...</option>
+              <option v-for="prog in programStore.programs" :key="prog.id" :value="Number(prog.id)">
+                {{ prog.name }}
+              </option>
+            </select>
           </div>
         </div>
 
@@ -131,7 +146,7 @@
           <label class="text-xs font-black text-gray-500">مشرفة الدفعة المسؤولة *</label>
           <select v-model="formData.batch_supervisor" class="w-full p-2.5 border border-gray-200 rounded-xl outline-none text-sm font-bold focus:border-amber-700 transition-all">
             <option :value="null" disabled>اختر المشرفة من النظام...</option>
-            <option v-for="superv in systemSupervisors" :key="superv.id" :value="superv.id">{{ superv.fullName }}</option>
+            <option v-for="superv in systemSupervisors" :key="superv.id" :value="Number(superv.id)">{{ superv.fullName }}</option>
           </select>
         </div>
 
@@ -150,32 +165,29 @@
           <div class="space-y-1">
             <label class="text-xs font-black text-gray-500">المستوى الحالي للدفعة *</label>
             <select v-model="formData.current_level" class="w-full p-2.5 border border-gray-200 rounded-xl outline-none text-sm font-bold focus:border-amber-700 transition-all">
-              <option value="المستوى الأول">المستوى الأول</option>
-              <option value="المستوى الثاني">المستوى الثاني</option>
-              <option value="المستوى الثالث">المستوى الثالث</option>
+              <option value="الأول">الأول</option>
+              <option value="الثاني">الثاني</option>
+              <option value="الثالث">الثالث</option>
             </select>
           </div>
 
           <div class="space-y-1">
-            <div class="flex justify-between items-center mb-1">
-              <label class="text-xs font-black text-gray-500">حالة الدفعة *</label>
-              <button type="button" @click="isCustomStatusMode = !isCustomStatusMode" class="text-[10px] text-[var(--color-primary)] underline font-black">
-                {{ isCustomStatusMode ? 'إلغاء' : '➕ حالة جديدة' }}
-              </button>
-            </div>
-
-            <select v-if="!isCustomStatusMode" v-model="formData.status" class="w-full p-2.5 border border-gray-200 rounded-xl text-sm font-bold outline-none focus:border-amber-700 transition-all">
-              <option :value="null" disabled>حددي حالة من القائمة...</option>
-              <option v-for="st in statusOptions" :key="st.id" :value="st.id">{{ st.name }}</option>
+            <label class="text-xs font-black text-gray-500">حالة الدفعة *</label>
+            <select v-model="formData.status" class="w-full p-2.5 border border-gray-200 rounded-xl text-sm font-bold outline-none focus:border-amber-700 transition-all">
+              <option :value="null" disabled>حدد الحالة...</option>
+              <option v-for="st in statusOptions" :key="st.id" :value="Number(st.id)">{{ st.name }}</option>
             </select>
-
-            <input v-else v-model="customStatusText" type="text" placeholder="اكتبي اسم الحالة الفخرية..." class="w-full p-2.5 border border-amber-500 rounded-xl outline-none text-sm font-bold focus:ring-1 focus:ring-amber-500 transition-all">
           </div>
+        </div>
+
+        <div class="space-y-1">
+          <label class="text-xs font-black text-gray-500">عدد الحلقات المستهدفة (num_group) *</label>
+          <input v-model.number="formData.num_group" type="number" min="1" class="w-full p-2.5 border border-gray-200 rounded-xl outline-none text-sm font-bold focus:border-amber-700 transition-all">
         </div>
 
         <div class="flex gap-3 pt-3 border-t border-gray-50">
           <button @click="isModalOpen = false" class="px-4 py-2.5 rounded-xl border border-gray-200 text-xs font-black text-gray-500 hover:bg-gray-50 flex-1">إلغاء</button>
-          <button @click="submitForm" class="px-4 py-2.5 rounded-xl bg-amber-800 text-white text-xs font-black hover:bg-amber-900 shadow-sm flex-1">حفظ الدفعة</button>
+          <button @click="submitForm" class="px-4 py-2.5 rounded-xl bg-[var(--color-primary)] text-white text-xs font-black hover:opacity-90 shadow-sm flex-1">حفظ الدفعة</button>
         </div>
       </div>
     </div>
@@ -185,10 +197,14 @@
 
 <script setup>
 import { ref, onMounted, computed } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router' // 💡 تم إضافة useRoute لقراءة معطيات الرابط بدقة واحترافية
 import GenericAdminLayout from '@/views/dashboard/admin/GenericAdminLayout.vue';
 import { useBatchStore } from '@/stors/batch-store.js'
 import { usePepoleStore } from '@/stors/pepole-store.js'
+import { useProgramStore } from "@/stors/program-stor.js"; 
+
+import ConfirmModal from '@/components/confirmAndSucces/ConfirmModal.vue'; 
+import SuccessToast from '@/components/confirmAndSucces/SuccessToast.vue';
 
 const props = defineProps({
   selectedPrograms: {
@@ -198,8 +214,10 @@ const props = defineProps({
 })
 
 const router = useRouter()
+const route = useRoute() // تفعيل قراءة المسار الحالي للراوتر
 const batchStore = useBatchStore()
 const pepoleStore = usePepoleStore()
+const programStore = useProgramStore()
 
 const searchQuery = ref('')
 const filterStatus = ref('')
@@ -211,38 +229,46 @@ const isEditMode = ref(false)
 const modalValidationError = ref('')
 const selectedBatchId = ref(null)
 const isPeopleLoading = ref(false)
+const isConfirmLoading = ref(false)
+const isConfirmOpen = ref(false)
+const isToastVisible = ref(false)
+const toastMsg = ref('')
 
-const isCustomStatusMode = ref(false)
-const customStatusText = ref('')
+// قراءة الـ courseId من الرابط الحالي إن وُجد لحل مشكلة التنقل الاختياري
+const currentCourseId = computed(() => route.params.courseId)
 
 const formData = ref({
-  name: '',
-  code: '',
   program: null,
   batch_supervisor: null,
   start_date: '',
   end_date: '',
-  current_level: 'المستوى الأول',
-  num_group: 1,
+  current_level: 'الأول',
+  num_group: 15, 
   status: null
 })
 
+const confirmData = ref({
+  title: '',
+  message: '',
+  id: null
+})
+
 const isAdmin = ref(true)
-
-// ربط مباشر مع حالة التحميل الخاصة بـ الـ Batch Store
 const isLoading = computed(() => batchStore.loading)
-
-const batchColumns = [
-  { label: 'بيانات الدفعة', key: 'name' }
-]
+const batchColumns = [{ label: 'بيانات الدفعة', key: 'program_name' }]
 
 const programTabs = computed(() => {
-  return [{ label: 'كافة المساقات الدراسية', value: 'all' }]
+  const tabs = [{ label: 'الكل', value: 'all' }]
+  if (programStore.programs && programStore.programs.length > 0) {
+    programStore.programs.forEach(prog => {
+      tabs.push({ label: prog.name, value: String(prog.id) })
+    })
+  }
+  return tabs
 })
 
 const statusOptions = computed(() => batchStore.getStatusOptions || [])
 
-// جلب المشرفات بناءً على أدوارهن التفصيلية من مصفوفة الـ Users المفلترة
 const systemSupervisors = computed(() => {
   const allUsersWithRoles = pepoleStore.getUsersWithRoles || []
   return allUsersWithRoles.filter(user => {
@@ -251,46 +277,58 @@ const systemSupervisors = computed(() => {
   })
 })
 
-// تصفية وعرض الدفعات الذكي بالاعتماد التام على جلب البيانات الـ Processed المُهيأة بالتواريخ والحالات
+// 💡 تصفية الدفعات مع دعم التصفية التلقائية بالـ courseId القادم من الرابط ومزامنة التواريخ
 const filteredAndSearchedBatches = computed(() => {
   let list = batchStore.getProcessedBatches || []
+  console.log(list)
 
+  // أ. إذا فتحنا الدفعات التابعة لكورس محدد عبر الرابط
+  if (currentCourseId.value) {
+    list = list.filter(b => String(b?.program) === String(currentCourseId.value))
+  } 
+  // ب. إذا فتحنا القائمة العامة، نعتمد على تصفية الـ Tabs العادية
+  else if (currentProgramTab.value !== 'all') {
+    list = list.filter(b => String(b?.program) === String(currentProgramTab.value))
+  }
+
+  // ج. البحث بالنص
   if (searchQuery.value && searchQuery.value.trim()) {
     const query = searchQuery.value.toLowerCase().trim()
-    list = list.filter(b => 
-      (b?.name && b.name.toLowerCase().includes(query)) || 
-      (b?.code && b.code.toLowerCase().includes(query))
-    )
+    list = list.filter(b => {
+      const name = b?.program_name || getProgramNameFromStore(b?.program)
+      return name.toLowerCase().includes(query)
+    })
   }
 
+  // د. تصفية بحسب الحالة
   if (filterStatus.value) {
-    list = list.filter(b => String(b?.statusId) === String(filterStatus.value))
+    list = list.filter(b => String(b?.status) === String(filterStatus.value))
   }
   
+  // هـ. تصفية بحسب المستوى الدراسي
   if (filterLevel.value) {
-    list = list.filter(b => b?.current_level === filterLevel.value)
+    list = list.filter(b => String(b?.current_level) === String(filterLevel.value))
   }
 
   return list
 })
 
 const handleProgramTabChange = (tabValue) => {
-  currentProgramTab.value = 'all'
+  currentProgramTab.value = tabValue
 }
 
-// تعديل المزامنة لتعمل بالتوازي مع الاستورين بشكل آمن ومطابق للـ Pepole Store
+const getProgramNameFromStore = (programId) => {
+  if (!programId) return 'غير محدد'
+  const match = programStore.programs.find(p => String(p.id) === String(programId))
+  return match ? match.name : 'مساق تعليمي'
+}
+
 const loadData = async () => {
   isPeopleLoading.value = true
   try {
-    // استدعاء مباشر وصريح مع await لكل مخزن لضمان ملء المصفوفات بالترتيب
-    if (batchStore.getBatchStoreData) {
-      await batchStore.getBatchStoreData()
-    }
-    if (pepoleStore.getPeapleStoreData) {
-      await pepoleStore.getPeapleStoreData()
-    }
-    
-    console.log("تم تحديث مخازن الدفعات والمشرفات بنجاح:", batchStore.batches)
+    if (batchStore.getBatchStoreData) await batchStore.getBatchStoreData()
+    if (pepoleStore.getPeapleStoreData) await pepoleStore.getPeapleStoreData()
+    if (programStore.getAllPrograms) await programStore.getAllPrograms()
   } catch (err) {
     console.error("خطأ أثناء جلب المزامنة المباشرة:", err)
   } finally {
@@ -302,18 +340,13 @@ onMounted(() => {
   loadData()
 })
 
-// تحديث ذكي لجلب الاسم الكامل للمشرفة من مصفوفة الأشخاص باستخدام الـ id المعالج
 const getSupervisorName = (id) => {
   if (!id) return 'لم يحدد بعد'
-  // محاولة البحث أولاً في قائمة المستخدمين ذوي الأدوار لاستخلاص الـ fullName
   const allUsersWithRoles = pepoleStore.getUsersWithRoles || []
   let supervisor = allUsersWithRoles.find(s => s?.id === id)
   
-  if (supervisor && supervisor.fullName) {
-    return supervisor.fullName
-  }
+  if (supervisor && supervisor.fullName) return supervisor.fullName
 
-  // خطة بديلة (Fallback) للبحث في مصفوفة الحسابات الإجمالية بالستور
   const allUsers = pepoleStore.getUsers || []
   supervisor = allUsers.find(s => s?.id === id)
   return supervisor ? (supervisor.fullName || supervisor.name) : 'لم يحدد بعد'
@@ -321,19 +354,15 @@ const getSupervisorName = (id) => {
 
 const openAddModal = () => {
   isEditMode.value = false
-  isCustomStatusMode.value = false
-  customStatusText.value = ''
   modalValidationError.value = ''
 
   formData.value = {
-    name: '',
-    code: '',
-    program: 1,
+    program: currentCourseId.value ? Number(currentCourseId.value) : (programStore.programs[0]?.id || null),
     batch_supervisor: null,
     start_date: '',
     end_date: '',
-    current_level: 'المستوى الأول',
-    num_group: 1,
+    current_level: 'الأول',
+    num_group: 15,
     status: statusOptions.value[0]?.id || null
   }
   isModalOpen.value = true
@@ -342,51 +371,41 @@ const openAddModal = () => {
 const openEditModal = (batch) => {
   if (!batch) return
   isEditMode.value = true
-  isCustomStatusMode.value = false
-  customStatusText.value = ''
   modalValidationError.value = ''
   selectedBatchId.value = batch.id
-  
+
+  const rawStatus = batch.status || null
+  const finalStatus = rawStatus ? (isNaN(rawStatus) ? rawStatus : Number(rawStatus)) : null
+
+  // جلب البيانات مع تأمين التواريخ
+  const sDate = batch.start_date || batch.raw?.start_date || ''
+  const eDate = batch.end_date || batch.raw?.end_date || ''
+
   formData.value = {
-    name: batch.name || '',
-    code: batch.code || '',
-    program: batch.program || 1,
-    batch_supervisor: batch.batch_supervisor || null,
-    start_date: batch.raw_start_date || '',
-    end_date: batch.raw_end_date || '',
-    current_level: batch.current_level || 'المستوى الأول',
-    num_group: batch.num_group || 1,
-    status: batch.statusId ? (isNaN(batch.statusId) ? batch.statusId : Number(batch.statusId)) : null
+    program: batch.program ? Number(batch.program) : null,
+    batch_supervisor: batch.batch_supervisor ? Number(batch.batch_supervisor) : null,
+    start_date: sDate,
+    end_date: eDate,
+    current_level: batch.current_level || 'الأول',
+    num_group: batch.num_group || 15,
+    status: finalStatus
   }
   isModalOpen.value = true
 }
 
 const submitForm = async () => {
-  if (!formData.value.name || !formData.value.code || !formData.value.batch_supervisor || !formData.value.start_date || !formData.value.end_date) {
-    modalValidationError.value = 'يرجى تعبئة كافة الحقول الإلزامية لنموذج الدفعة.'
+  if (!formData.value.program || !formData.value.batch_supervisor || !formData.value.start_date || !formData.value.end_date || !formData.value.num_group) {
+    modalValidationError.value = 'يرجى تعبئة كافة الحقول الإلزامية للدفعة.'
     return
   }
 
-  if (isCustomStatusMode.value) {
-    if (!customStatusText.value.trim()) {
-      modalValidationError.value = 'الرجاء إدخال اسم الحالة المستحدثة لتسجيلها.'
-      return
-    }
-    try {
-      const statusResult = await batchStore.createBatchStatus({ name: customStatusText.value.trim() })
-      if (statusResult && statusResult.success && statusResult.data) {
-        formData.value.status = statusResult.data.id
-      } else {
-        formData.value.status = statusOptions.value[0]?.id || null
-      }
-    } catch (e) {
-      formData.value.status = statusOptions.value[0]?.id || null
-    }
-  }
-
   const finalPayload = {
-    ...formData.value,
-    status_id: formData.value.status,
+    program: formData.value.program,
+    batch_supervisor: formData.value.batch_supervisor,
+    start_date: formData.value.start_date,
+    end_date: formData.value.end_date,
+    current_level: formData.value.current_level,
+    num_group: formData.value.num_group,
     status: formData.value.status
   }
 
@@ -397,21 +416,51 @@ const submitForm = async () => {
 
     if (result && result.success) {
       isModalOpen.value = false
+      showToast(isEditMode.value ? "تم تحديث بيانات الدفعة بنجاح" : "تم إضافة الدفعة التعليمية الجديدة بنجاح")
       if (batchStore.getAllBatches) await batchStore.getAllBatches()
     } else {
-      modalValidationError.value = typeof result?.message === 'object' ? JSON.stringify(result.message) : (result?.message || 'خطأ غير معروف من خادم النظام')
+      modalValidationError.value = typeof result?.message === 'object' ? JSON.stringify(result.message) : (result?.message || 'خطأ من خادم النظام')
     }
   } catch (err) {
     modalValidationError.value = 'حدث خطأ غير متوقع في الاتصال بالسيرفر أثناء الحفظ.'
   }
 }
 
-const handleDeleteBatch = async (id) => {
-  if (!id) return
-  if (confirm('هل أنتِ متأكدة من حذف هذه الدفعة نهائياً من سجلات المقرأة؟')) {
-    const result = await batchStore.deleteBatch(id)
-    if (result?.success && batchStore.getAllBatches) await batchStore.getAllBatches()
+const openDeleteConfirm = (batch) => {
+  if (!batch) return
+  confirmData.value = {
+    title: 'حذف دفعة تعليمية',
+    message: `تحذير: هل أنتِ متأكدة من حذف دفعة مساق (${batch.program_name || batch.id}) نهائياً من سجلات المقرأة؟`,
+    id: batch.id
   }
+  isConfirmOpen.value = true
+}
+
+const executeAction = async () => {
+  const id = confirmData.value.id
+  if (!id) return
+
+  isConfirmLoading.value = true
+  try {
+    const result = await batchStore.deleteBatch(id)
+    if (result?.success) {
+      showToast("تم حذف الدفعة بنجاح من المنظومة")
+      if (batchStore.getAllBatches) await batchStore.getAllBatches()
+    } else {
+      showToast("عذراً، فشلت عملية الحذف من السيرفر")
+    }
+  } catch (error) {
+    console.error("حدث خطأ في executeAction:", error)
+    showToast("عذراً، فشلت العملية البرمجية بسبب مشكلة في الاتصال")
+  } finally {
+    isConfirmLoading.value = false
+    isConfirmOpen.value = false
+  }
+}
+
+const showToast = (msg) => {
+  toastMsg.value = msg
+  isToastVisible.value = true
 }
 
 const viewBatchDetails = (batchId) => {

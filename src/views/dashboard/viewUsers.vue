@@ -90,7 +90,7 @@
                 <td class="td-style">
                   <div v-if="user.accountDetails?.id !== '—'" class="account-control-box">
                     <div class="flex flex-col gap-1 mb-3">
-                      <span class="text-[10px] font-black uppercase text-amber-700">بريد المنظومة</span>
+                      <span class="text-[10px] font-black uppercase text-amber-700"> البريد الإلكتروني</span>
                       
                       <a :href="`mailto:${user.accountDetails?.email}`" class="contact-item-link group bg-white p-1 w-full rounded-xl border border-gray-100 shadow-sm">
                         <div class="icon-box-mini email-bg"><i class="fa fa-envelope"></i></div>
@@ -160,7 +160,7 @@
           :mode="modalMode"
           :user-data="selectedUser"
           @close="isAccountModalOpen = false"
-          @refresh="refreshData"
+          @refresh="handlAddAcount"
         />
 
         <ConfirmModal 
@@ -398,6 +398,13 @@ const handlePersonSubmit = async (payload) => {
     showToast("عذراً، حدث خطأ غير متوقع أثناء العملية");
   }
 };
+const handlAddAcount = async ()=>{
+  isAccountModalOpen.value=false;
+        showToast("تم اضافة الحساب بنجاح ");
+              await refreshData(); 
+
+
+}
 
 const executeAction = async () => {
   const { actionType, id } = confirmData.value;
