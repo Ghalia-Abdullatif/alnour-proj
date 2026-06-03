@@ -341,7 +341,7 @@ const routes = [
         path: 'UsersLog',
         name: 'UsersLog',
         component: () => UsersLog,
-        meta: { roles: ['super_admin', 'admin'] } 
+        meta: { roles: ['super_admin','batch_supervisor', 'admin'] } 
       },
       // [الصفحة 1]: بناء القوالب والأسئلة (خاص بالأدمن فقط)
     // {
@@ -391,7 +391,8 @@ const routes = [
             path: 'reports',
             name: 'AdminReports',
             component: () => import('../views/dashboard/admin/AdminReportTemplates.vue'),
-            meta: { roles: ['super_admin', 'admin'] }
+            meta: { roles: ['super_admin', 'group_supervisor'
+,'admin'] }
           },
           {
             path: 'registration',
@@ -403,7 +404,7 @@ const routes = [
             path: 'notifications',
             name: 'AdminNotifications',
             component: () => import('../views/dashboard/AdminNotifications.vue'),
-            meta: { roles: ['super_admin', 'admin'] }
+            meta: { roles: ['super_admin','batch_supervisor' ,'teacher','group_supervisor','admin'] }
           }
         ]
       },
@@ -487,34 +488,34 @@ const router = createRouter({
 // ========================================================
 // 🛡️ Route Guard المحدث ليعمل بنظام أدوار الجلسة الحقيقي 
 // ========================================================
-router.beforeEach((to, from, next) => {
-  const authStore = useAuthStore();
+// router.beforeEach((to, from, next) => {
+//   const authStore = useAuthStore();
 
-  // 1. التحقق هل المستخدم مسجل دخول أم لا للمسارات المحمية
-  const isAuthRoute = to.path.startsWith('/auth');
-  const isPublicRoute = ['Register', 'ProgramSelection', 'SuccesRegester', 'NotFound'].includes(to.name);
+//   // 1. التحقق هل المستخدم مسجل دخول أم لا للمسارات المحمية
+//   const isAuthRoute = to.path.startsWith('/auth');
+//   const isPublicRoute = ['Register', 'ProgramSelection', 'SuccesRegester', 'NotFound'].includes(to.name);
 
-  if (!authStore.isLoggedIn && !isAuthRoute && !isPublicRoute) {
-    console.warn("🔒 مستخدم غير مسجل، يتم توجيهه لصفحة الدخول");
-    return next({ name: 'Login' });
-  }
+//   if (!authStore.isLoggedIn && !isAuthRoute && !isPublicRoute) {
+//     console.warn("🔒 مستخدم غير مسجل، يتم توجيهه لصفحة الدخول");
+//     return next({ name: 'Login' });
+//   }
 
-  // 2. فحص الدور الحالي المفعل للجلسة (sessionRole) ومطابقته مع الـ meta.roles
-  if (to.meta.roles) {
-    const currentActiveRole = authStore.sessionRole; // الجلب المباشر من الـ State الحقيقي
+//   // 2. فحص الدور الحالي المفعل للجلسة (sessionRole) ومطابقته مع الـ meta.roles
+//   if (to.meta.roles) {
+//     const currentActiveRole = authStore.sessionRole; // الجلب المباشر من الـ State الحقيقي
 
-    if (!to.meta.roles.includes(currentActiveRole)) {
-      console.error(`⚠️ صلاحية غير كافية! دورك الحالي (${currentActiveRole}) لا يملك حق الوصول إلى: ${to.path}`);
+//     if (!to.meta.roles.includes(currentActiveRole)) {
+//       console.error(`⚠️ صلاحية غير كافية! دورك الحالي (${currentActiveRole}) لا يملك حق الوصول إلى: ${to.path}`);
       
-      // التوجيه التلقائي إلى واجهة اختيار الأدوار لو عنده أدوار متعددة ولم يحدد، أو إبقاؤه في الداشبورد
-      if (authStore.roles.length > 1 && !currentActiveRole) {
-        return next({ name: 'ChoseRole' });
-      }
-      return next('/Dashboard');
-    }
-  }
+//       // التوجيه التلقائي إلى واجهة اختيار الأدوار لو عنده أدوار متعددة ولم يحدد، أو إبقاؤه في الداشبورد
+//       if (authStore.roles.length > 1 && !currentActiveRole) {
+//         return next({ name: 'ChoseRole' });
+//       }
+//       return next('/Dashboard');
+//     }
+//   }
 
-  next();
-});
+//   next();
+// });
 
-export default router
+// export default router

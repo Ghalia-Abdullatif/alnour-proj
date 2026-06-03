@@ -4,7 +4,7 @@
       
       <header class="header-section">
         <h2 class="title">اختيار دور الجلسة</h2>
-        <p class="subtitle">يرجى تحديد الدور الوظيفي المناسب للمشاركة في الجلسة الحالية</p>
+        <p class="subtitle">يرجى تحديد دور الجلسة </p>
       </header>
            <div class="cardsAndfavContainer">
 

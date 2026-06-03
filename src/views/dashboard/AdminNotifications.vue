@@ -1,7 +1,8 @@
 <!-- تتتتتتتتتتتتتتتتتتتتتتتتتتتتتتتتتتتتتتتتتتتتتتتتتتتتتتتتتتت -->
 
-<template>
+<!-- تتتتتتتتتتتتتتتتتتتتتتتتتتتتتتتتتتتتتتتتتتتتتتتتتتتتتتتتتتت -->
 
+<template>
   <div class="p-4 md:p-8 space-y-8 text-right font-['Tajawal',_sans-serif] bg-gray-50/50 min-h-screen" dir="rtl">
     
     <!-- الهيدر الرئيسي -->
@@ -11,9 +12,12 @@
           <span class="w-2.5 h-6 bg-[#802c2c] rounded-full inline-block"></span>
           مركز بث الإشعارات
         </h2>
-        <p class="text-xs md:text-sm text-gray-500 font-medium mt-1">بث  التنبيهات والتوجيهات  عبر النظام</p>
+        <p class=" pr-6 text-xs md:text-sm text-gray-500 font-medium mt-1">بث التنبيهات والتوجيهات عبر النظام</p>
       </div>
+      
+      <!-- زر البث: يظهر للأدمن المسؤول عن الجلسة فقط -->
       <button 
+        v-if="isAdmin"
         @click="openCreateModal" 
         class="bg-[#802c2c] text-white px-6 py-3 rounded-2xl font-bold shadow-lg shadow-red-900/10 hover:scale-[1.02] transition-all flex items-center justify-center gap-2"
       >
@@ -22,8 +26,8 @@
       </button>
     </div>
 
-    <!-- الإحصائيات -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <!-- الإحصائيات: تظهر للأدمن فقط لتأمين بيانات لوحة التحكم -->
+    <div v-if="isAdmin" class="grid grid-cols-1 md:grid-cols-2 gap-6">
       <div class="bg-white p-6 rounded-[2rem] border border-gray-100 shadow-sm flex items-center justify-between">
         <div class="flex items-center gap-5">
           <div class="w-14 h-14 bg-red-50 text-[#802c2c] rounded-2xl flex items-center justify-center text-xl shadow-inner">
@@ -47,7 +51,7 @@
           <div>
             <div class="text-xs text-gray-400 font-bold">النطاق الإجمالي للمتلقين</div>
             <div class="text-2xl font-black text-gray-800 mt-1">
-             {{totalUsersInSystem}} <span class="text-xs font-normal text-gray-400">مستفيد</span>
+             {{ totalUsersInSystem }} <span class="text-xs font-normal text-gray-400">مستفيد</span>
             </div>
           </div>
         </div>
@@ -63,19 +67,17 @@
           أرشيف التنبيهات الأخيرة
         </h3>
         <span class="text-xs bg-red-50 text-[#802c2c] font-bold px-3 py-1 rounded-full">
-          {{ totalCount }} تنبيه محفوظ
+          {{ totalCount }} تنبيه متاح لكِ
         </span>
       </div>
-        <div v-if="isLoading">
-              
-                  <div class="loading-wrapper">
-                    <div class="loader"></div>
-                    <p class="loading-text animate-pulse">جاري جلب التنبيهات من الارشيف...</p>
-                  </div>
-               
-            </div>
+
+      <!-- مؤشر التحميل والتغذية الراجعة (Feedback Loading) -->
+      <div v-if="isLoading" class="p-12 text-center">
+        <div class="w-10 h-10 border-4 border-[#802c2c] border-t-transparent rounded-full animate-spin mx-auto mb-3"></div>
+        <p class="text-xs text-gray-500 font-medium animate-pulse">جاري مزامنة وجلب التنبيهات من الأرشيف...</p>
+      </div>
       
-      <div v-if="notifications.length > 0" class="divide-y divide-gray-50">
+      <div v-else-if="notifications.length > 0" class="divide-y divide-gray-50">
         <div 
           v-for="notif in notifications" 
           :key="notif.id" 
@@ -86,13 +88,15 @@
             <div class="space-y-1">
               <h4 class="text-sm font-black text-gray-800">{{ notif.title }}</h4>
               <p class="text-xs text-gray-500 leading-relaxed">{{ notif.message }}</p>
-              <div class="flex items-center gap-2 pt-1">
+              
+              <!-- حجب معلومات الاستهداف التفصيلية وعرضها للأدمن فقط حماية للخصوصية -->
+              <div v-if="isAdmin" class="flex items-center gap-2 pt-1">
                 <span class="text-[10px] bg-amber-50 text-amber-700 font-black px-2 py-0.5 rounded-md">
-                  المستهدف: |
-                  <span v-if="notif.is_broadcast">الكل</span>
+                  المستهدف: 
+                  <span v-if="notif.is_broadcast">|الكل|</span>
                   <span v-else v-for="role in notif.notification_roles" :key="role.role_id">
-                    {{ role.role_name }} 
-                  </span>|
+                 |{{ role.role_name }} |
+                  </span>
                 </span>
               </div>
             </div>
@@ -100,12 +104,13 @@
           
           <div class="flex sm:flex-col items-center sm:items-end justify-between w-full sm:w-auto gap-3 shrink-0">
             <div class="text-[11px] text-gray-400 font-medium flex items-center gap-1.5">
-              <!-- <i class="far fa-calendar-alt"></i>  -->
-              <!-- <span>{{ notif.created_at || '2026-05-17' }}</span> -->
-              <span class="text-green-600 font-bold bg-green-50 px-1.5 py-0.5 rounded text-[10px]">● تم الإرسال</span>
+              <span v-if="isAdmin" class="text-green-600 font-bold bg-green-50 px-1.5 py-0.5 rounded text-[10px]">● تم الإرسال</span>
+                            <span v-else class="text-green-600 font-bold bg-green-50 px-1.5 py-0.5 rounded text-[10px]">● تم التسليم</span>
+
             </div>
             
-            <div class="flex items-center gap-2 opacity-100 sm:opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+            <!-- أزرار الإجراءات (Actions): تظهر حصرياً للأدمن المسؤول عن النظام -->
+            <div v-if="isAdmin" class="flex items-center gap-2 opacity-100 sm:opacity-0 group-hover:opacity-100 transition-opacity duration-200">
               <button 
                 @click="openEditModal(notif)" 
                 title="تعديل الإشعار" 
@@ -131,8 +136,8 @@
       </div>
     </div>
 
-    <!-- مودال البث والتعديل -->
-    <div v-if="isSendModalOpen" class="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-[150] p-4 overflow-y-auto">
+    <!-- مودال البث والتعديل: مقيد للأدمن كخط دفاعي إضافي لمنع الاستدعاء غير المصرح به -->
+    <div v-if="isSendModalOpen && isAdmin" class="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-[150] p-4 overflow-y-auto">
       <div class="bg-white w-full max-w-lg rounded-[2.5rem] shadow-2xl overflow-hidden border border-gray-100 transform transition-all my-auto">
         
         <div class="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
@@ -231,7 +236,7 @@
       </div>
     </div>
 
-    <!-- مكونات التغذية الراجعة -->
+    <!-- مكونات التغذية الراجعة التفاعلية -->
     <ConfirmModal 
       :show="isConfirmOpen"
       :loading="isconfirmLouading"
@@ -254,11 +259,13 @@
 import { ref, onMounted, computed, reactive } from 'vue';
 import { useNotifcationStore } from "@/stors/notification-store.js";
 import { usePepoleStore } from "@/stors/pepole-store.js";
+import { useAuthStore } from "@/stors/acount-store.js"; //[cite: 1] استيراد ستور المصادقة الجديد للربط بالجلسة
 import ConfirmModal from '@/components/confirmAndSucces/ConfirmModal.vue'; 
 import SuccessToast from '@/components/confirmAndSucces/SuccessToast.vue';
 
 const notificationStore = useNotifcationStore();
 const pepoleStore = usePepoleStore();
+const authStore = useAuthStore(); //[cite: 1] تفعيل ستور المصادقة لاستخراج بيانات الجلسة الحالية
 
 // Feedback & Modals State
 const isConfirmOpen = ref(false);
@@ -267,15 +274,13 @@ const isToastVisible = ref(false);
 const toastMsg = ref('');
 
 const notifications = ref([]);
-const isconfirmLouading=ref()
-const availableRoles = ref([]); // تحويلها لـ ref لمنع أخطاء الـ .value ولتصبح التغييرات تفاعلية
+const isconfirmLouading = ref(false);
+const availableRoles = ref([]); 
 const isSendModalOpen = ref(false);
 const isEditing = ref(false);
 const currentNotificationId = ref(null);
-const totalCount = computed(() => notifications.value.length); // حساب إجمالي الإشعارات في الأرشيف
-// حساب عدد الشرائح المستهدفة المتاحة في المقرأة ديناميكياً (باستثناء السوبر أدمن)
-const totalUsersInSystem = computed(() => pepoleStore.getTotalUsersCount);
-const isLoading=ref(false);
+const isLoading = ref(false);
+
 const newNotification = reactive({
   title: '',
   message: '',
@@ -288,38 +293,77 @@ const errors = reactive({
   targets: ''
 });
 
+//[cite: 1] فحص الصلاحيات الإدارية للجلسة الحالية الحية بناءً على المتجر الجديد
+const isAdmin = computed(() => {
+  const currentRoleDetails = authStore.getCrrentRoleDetails; //[cite: 1] جلب تفاصيل الدور الفعلي المختار حالياً
+  if (currentRoleDetails && currentRoleDetails.code) {
+    return currentRoleDetails.code === 'admin' || currentRoleDetails.code === 'super_admin';
+  }
+  // كخيار احتياطي إذا لم تكن التفاصيل جاهزة بعد من الـ Getters
+  return authStore.sessionRole === 'admin' || authStore.sessionRole === 'super_admin'; //[cite: 1]
+});
+
+//[cite: 1] جلب الـ ID الخاص بدور الجلسة الحالية لفلترة إشعارات المستفيدين
+const currentUserRoleId = computed(() => {
+  return authStore.sessionRole; //[cite: 1] يمثل المعرف الرقمي أو الكود المعتمد لدور المستخدم الحالي
+});
+
+const totalCount = computed(() => notifications.value.length); 
+const totalUsersInSystem = computed(() => pepoleStore.getTotalUsersCount || 0);
+
 const showToast = (msg) => {
   toastMsg.value = msg;
-  isToastVisible = true;
-  // إخفاء التوست تلقائياً بعد 3 ثوانٍ كأفضل ممارسة تجربة مستخدم
+  isToastVisible.value = true;
   setTimeout(() => {
-    isToastVisible = false;
+    isToastVisible.value = false;
   }, 3000);
 };
 
-// جلب وتحديث البيانات المحلية
+// جلب وتحديث البيانات ومزامنتها حسب الصلاحيات والدور الفعلي للجلسة الحالية[cite: 1]
 const refreshData = async () => {
-  isLoading.value=true;
-
+  isLoading.value = true;
+  
+  // استدعاء جلب كامل سجلات الإشعارات من السيرفر
   await notificationStore.getAllnotifcations();
-  notifications.value = notificationStore.getnotfications;
-    isLoading.value=false;
-
+  
+  if (isAdmin.value) {
+    // الإدارة ترى كامل السجلات التاريخية دون قيود للتحكم والمراقبة
+    notifications.value = notificationStore.getnotfications;
+  } else {
+    // الطالبات والمعلمات يتم تصفية وعرض التنبيهات العامة أو التي تطابق دورهن الحالي فقط[cite: 1]
+    if (notificationStore.getNotificationsByRole) {
+      console.log(currentUserRoleId.value,"curreint rolle")
+      notifications.value = notificationStore.getNotificationsByRole(currentUserRoleId.value); //[cite: 1]
+    } else {
+      notifications.value = notificationStore.getnotfications;
+    }
+  }
+  
+  isLoading.value = false;
 };
 
 onMounted(async () => {
-  await refreshData();
+  isLoading.value = true;
+  if(isAdmin.value){
+  usePepoleStore.getPeapleStoreData;
   await pepoleStore.getAllRoles();
+
+}// جلب بيانات الأشخاص لتحديث الأدوار والإحصائيات
   
-  // تصفية وحفظ الأدوار المتاحة داخل الـ ref بشكل صحيح
-  availableRoles.value = pepoleStore.getRoles.filter(
-    role => role.code !== "super_admin"
-  );
+  // تصفية وحفظ الأدوار المتاحة داخل الـ ref بشكل صحيح لخيارات بث الإدارة
+  if (pepoleStore.getRoles) {
+    availableRoles.value = pepoleStore.getRoles.filter(
+      role => role.code !== "super_admin"
+    );
+  }
+  
+  // مزامنة وعرض البيانات فوراً بناءً على الدور الحالي في الجلسة[cite: 1]
+  await refreshData();
 });
 
 /* ============================================================
    منطق تفاعل الـ Checkboxes
-   ============================================================ */
+-[;o]   ============================================================ */
 const handleAllCheckboxChange = () => {
   if (newNotification.targets.includes('all')) {
     newNotification.targets = ['all', ...availableRoles.value.map(role => role.code)];
@@ -372,11 +416,12 @@ const sendNotification = async () => {
     roles: notification_roles
   };
 
+  isLoading.value = true;
   let result;
   if (isEditing.value) {
     result = await notificationStore.updatenotifcation(currentNotificationId.value, payload);
     if (result && result.success) {
-      showToast("تم تحديث التنبيه بنجاح!");
+      showToast("تم تحديث وتعديل التنبيه بنجاح!");
       handleCloseModal();
       await refreshData();
     }
@@ -394,11 +439,12 @@ const sendNotification = async () => {
     }
     
     if (result && result.success) {
-      showToast("تم إضافة التنبيه بنجاح!");
+      showToast("تم بث وإرسال التنبيه بنجاح!");
       handleCloseModal();
-      await refreshData(); // لتحديث القائمة فوراً في الواجهة
+      await refreshData();
     }
   }
+  isLoading.value = false;
 };
 
 const openCreateModal = () => {
@@ -413,7 +459,6 @@ const openEditModal = (notif) => {
   newNotification.message = notif.message;
   
   newNotification.targets = [];
-
   const rolesCodes = availableRoles.value.map(r => r.code);
 
   if (notif.is_broadcast) {
@@ -430,7 +475,6 @@ const openEditModal = (notif) => {
   isSendModalOpen.value = true;
 };
 
-// منطق الحذف المؤكد عبر الـ Modal التفاعلي
 const confirmDelete = (id) => {
   confirmData.value = {
     title: 'حذف الإشعار نهائياً',
@@ -443,29 +487,18 @@ const confirmDelete = (id) => {
 
 const executeAction = async () => {
   if (confirmData.value.actionType === 'delete') {
-    isconfirmLouading.value=true;
-   
-      // 1. استدعاء الدالة واستقبال النتيجة المرتجعة
-      const result = await notificationStore.deletenotifcation(confirmData.value.id);
-      
-      // 2. التحقق من علمية النجاح بناءً على هيكلة الـ requestData الجديدة
-      if (result && result.success) {
-        console.log("confirmmmmmmmm delete")
-            isconfirmLouading.value=false;
-
-        showToast("تم حذف التنبيه بنجاح!");
-        // جلب البيانات من جديد للتأكيد (أو سيعتمد التمبلت على التحديث التلقائي للستور)
-          isConfirmOpen.value = false;
-
-        await refreshData(); 
-      } else {
-        showToast(result.error || "عذراً، فشل حذف الإشعار.");
-              isConfirmOpen.value = false;
-
-      }
- 
-      // 3. الخطوة الأهم: إغلاق مودال التأكيد كلياً مما يقتل الـ Loading فوراً
-  
+    isconfirmLouading.value = true;
+    const result = await notificationStore.deletenotifcation(confirmData.value.id);
+    
+    if (result && result.success) {
+      isconfirmLouading.value = false;
+      showToast("تم حذف التنبيه بنجاح!");
+      isConfirmOpen.value = false;
+      await refreshData(); 
+    } else {
+      showToast(result.error || "عذراً، فشل حذف الإشعار.");
+      isConfirmOpen.value = false;
+    }
   }
 };
 
@@ -484,7 +517,6 @@ const handleCloseModal = () => {
   isSendModalOpen.value = false;
   resetForm();
 };
-
 </script>
 
 <style scoped>

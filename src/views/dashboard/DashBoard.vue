@@ -180,7 +180,14 @@ if(result.success){
 
           <h3>{{ currentRouteName }}</h3>
         </div>
-        <div class="flex items-center gap-3"><i class="fa fa-bell icon text-cardCasterd lg:text-sm  text-xl"></i>
+        <div class="flex items-center gap-3">
+<router-link 
+  :to="{ name: 'AdminNotifications' }" 
+  class="flex items-center gap-3 p-1.5 rounded-xl hover:bg-primary/5 active:scale-95 transition-all cursor-pointer"
+  title="مركز الإشعارات"
+>
+  <i class="fa fa-bell icon text-cardCasterd lg:text-sm text-xl"></i>
+</router-link>
 </div>
       </header>
 

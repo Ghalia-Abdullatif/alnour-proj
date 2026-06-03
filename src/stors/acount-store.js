@@ -57,7 +57,7 @@ export const useAuthStore = defineStore("auth", {
       return getRoleDetails(state.sessionRole);
     },
     getUserName: (state) => {
-      return state.userInfo?`${state.userInfo.first_name} ${state.userInfo.second_name}` : "مستخدم غير معروف";
+      return state.userInfo?`${state.userInfo.first_name} ${state.userInfo.second_name}` : " غير معروف";
     },
     getCurrentRole: (state) => {
       return state.sessionRole ?getRoleDetails(state.sessionRole)  : "دور غير محدد";
