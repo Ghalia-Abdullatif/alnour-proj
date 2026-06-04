@@ -1,4 +1,5 @@
 <template>
+  <div>
   <GenericAdminLayout
     title="إدارة أعضاء المقرأة"
     description="نظرة عامة  على بيانات الطلاب والمعلمين والمشرفين وحساباتهم  وصلاحياتهم"
@@ -204,7 +205,7 @@
         @supmit="(e) => handlePersonSubmit(e.message)" 
       >
         <template #top>
-          <div class="flex justify-center items-center mb-6">
+          <div class="flex justify-cen</div>ter items-center mb-6">
             <h2 class="text-xl font-black text-amber-800">
               {{ personModalMode === 'edit' ? 'تعديل بيانات العضو' : 'إضافة عضو جديد للمقرأة' }}
             </h2>
@@ -213,6 +214,7 @@
       </AddPerson>
     </div>
   </div>
+</div>
 </template>
 
 <script setup>

@@ -250,19 +250,19 @@ export const endpoint = {
       method: "DELETE",
     },
     getStatus:{
-      url:`${baseurl}batch-statuses/`,
+      url:`${baseurl}batches/batch-statuses/`,
       method:"GET"
     },
     addStatus:{
-      url:`${baseurl}batch-statuses/`,
+      url:`${baseurl}batches/batch-statuses/`,
       method:"PUT"
     },
     deleteStatus:{
-      url:`${baseurl}batch-statuses/{id}`,
+      url:`${baseurl}batches/batch-statuses/{id}`,
       method:"DELETE"
     },
      updateStatus:{
-      url:`${baseurl}batch-statuses/{id}`,
+      url:`${baseurl}batches/batch-statuses/{id}`,
       method:"PUT"
     },
 

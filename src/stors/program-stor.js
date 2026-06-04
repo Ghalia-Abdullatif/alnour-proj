@@ -5,135 +5,189 @@ import { DefaultVal } from "@/utils/constantDefaultVal.js";
 
 export const useProgramStore = defineStore("program", {
   state: () => ({
-    programs: [],   // مصفوفة تخزين البرامج/المساقات المجلوبة من السيرفر
-    loading: false, // حالة التحميل أثناء معالجة الطلبات
-    error: null,    // تخزين رسائل الأخطاء إن وجدت
+    programs: [],      // مصفوفة البرامج/المساقات
+    levels: [],        // مصفوفة المستويات الدراسية
+    gradeWeights: [],  // مصفوفة أوزان الدرجات
+    loading: false,
+    error: null,
   }),
 
   persist: {
-    key: "alnour-programs-data", // مفتاح فريد لحفظ البرامج في جلسة المتصفح
-    storage: sessionStorage,     // التخزين المؤقت للـ Session
+    key: "alnour-programs-data",
+    storage: sessionStorage,
   },
 
   getters: {
-    // جلب البرامج مضافاً إليها تنسيق عربي لتاريخ الإنشاء إذا كان متوفراً (مثل created_at)
     getProgramsList(state) {
       return state.programs.map(prog => ({
         ...prog,
         formattedDate: prog.created_at ? DefaultVal.ArabicDate(prog.created_at) : "—"
       }));
     },
-    // حساب عدد البرامج الإجمالي في النظام
-    getTotalProgramsCount(state) {
-      return state.programs?.length || 0;
+    getLevelsList(state) {
+      return state.levels || [];
+    },
+    getGradeWeightsList(state) {
+      return state.gradeWeights || [];
     }
   },
 
   actions: {
-    // 1. جلب جميع البرامج من السيرفر
-    async getAllPrograms() {
+    // جلب كل البيانات الأساسية بالتوازي للبرامج
+    async getProgramStoreData() {
       this.loading = true;
-      this.error = null;
+      try {
+        await Promise.all([
+          this.getAllPrograms(),
+          this.getAllLevels(),
+          this.getAllGradeWeights()
+        ]);
+      } catch (err) {
+        console.error("خطأ في جلب بيانات البرامج التوازية:", err);
+      } finally {
+        this.loading = false;
+      }
+    },
+
+    // ==========================================
+    // 1. المساقات (Programs) APIs
+    // ==========================================
+    async getAllPrograms() {
       try {
         const { url, method } = endpoint.programs.getAllPrograms;
         const { data, error } = await requestData(url, method);
-        
         if (data) {
-          this.programs = data;
-          console.log(this.programs, "Programs loaded successfully from store");
+          this.programs = Array.isArray(data) ? data : (data.results || []);
+          return { success: true, data: this.programs };
+        }
+        this.error = error;
+        return { success: false, message: error };
+      } catch (err) {
+        return { success: false, message: "فشل جلب المساقات." };
+      }
+    },
+
+    async createProgram(payload) {
+      try {
+        const { url, method } = endpoint.programs.createProgram || { url: "api/programs/programs/", method: "POST" };
+        const { data, error } = await requestData(url, method, payload);
+        if (data) {
+          this.programs.push(data);
           return { success: true, data };
         }
-        
-        this.error = error;
         return { success: false, message: error };
       } catch (err) {
-        return { success: false, message: "فشل الاتصال بخادم النظام أثناء جلب البرامج." };
-      } finally {
-        this.loading = false;
+        return { success: false };
       }
     },
 
-    // 2. إنشاء برنامج جديد
-    async createProgram(programData) {
-      this.loading = true;
-      this.error = null;
+    async updateProgram(id, payload) {
       try {
-        console.log("Creating new program with data:", programData);
-        const { url, method } = endpoint.programs.createProgram;
-        const { data, error } = await requestData(url, method, programData);
-        
+        const { url, method } = endpoint.programs.updateProgram || { url: "api/programs/programs/", method: "PUT" };
+        const { data, error } = await requestData(`${url}${id}/`, method, payload);
         if (data) {
-          console.log(data, "Program created successfully");
-          // إعادة جلب القائمة بعد الإضافة لضمان تزامن البيانات فوراً
-          await this.getAllPrograms();
-          return { success: true, ...data };
+          const idx = this.programs.findIndex(p => p.id === id);
+          if (idx !== -1) this.programs[idx] = data;
+          return { success: true, data };
         }
-        
-        this.error = error;
         return { success: false, message: error };
       } catch (err) {
-        return { success: false, message: "فشل الاتصال بخادم النظام لإنشاء البرنامج." };
-      } finally {
-        this.loading = false;
+        return { success: false };
       }
     },
 
-    // 3. تعديل برنامج معين بواسطة الـ ID
-    async updateProgram(programId, programData) {
-      this.loading = true;
-      this.error = null;
+    async deleteProgram(id) {
       try {
-        console.log("Updating program ID:", programId, "with data:", programData);
-        const { url, method } = endpoint.programs.updateProgram; 
-        
-        // دمج الـ ID مع الرابط وإضافة الـ Slash الإلزامي لـ Django ليكون مثل: /api/programs/programs/5/
-        const finalUrl = `${url}${programId}/`; 
-        
-        const { data, error } = await requestData(finalUrl, method, programData);
-        
-        if (data) {
-          console.log(data, "Program updated successfully");
-          // تحديث القائمة لإظهار التعديلات مباشرة
-          await this.getAllPrograms();
-          return { success: true, ...data };
-        }
-        
-        this.error = error;
-        return { success: false, message: error };
-      } catch (err) {
-        return { success: false, message: "فشل الاتصال بخادم النظام لتعديل البرنامج." };
-      } finally {
-        this.loading = false;
-      }
-    },
-
-    // 4. حذف برنامج من النظام نهائياً
-    async deleteProgram(programId) {
-      this.loading = true;
-      this.error = null;
-      try {
-        console.log("Deleting program ID:", programId);
-        const { url, method } = endpoint.programs.deleteProgram;
-        
-        // دمج الـ ID مع الرابط وإضافة الـ Slash الإلزامي لـ Django
-        const finalUrl = `${url}${programId}/`; 
-        
-        const { data, error } = await requestData(finalUrl, method);
-        
+        const { url, method } = endpoint.programs.deleteProgram || { url: "api/programs/programs/", method: "DELETE" };
+        const { error } = await requestData(`${url}${id}/`, method);
         if (!error) {
-          console.log("Program deleted successfully from backend");
-          // تحديث المصفوفة محلياً فوراً لحذف العنصر من الواجهة دون استهلاك طلب شبكة إضافي
-          this.programs = this.programs.filter(p => p.id !== programId);
-          return { success: true, ...data };
+          this.programs = this.programs.filter(p => p.id !== id);
+          return { success: true };
         }
-        
-        this.error = error;
-        return { success: false, message: error };
+        return { success: false };
       } catch (err) {
-        return { success: false, message: "فشل الاتصال بخادم النظام لحذف البرنامج." };
-      } finally {
-        this.loading = false;
+        return { success: false };
       }
+    },
+
+    // ==========================================
+    // 2. المستويات الدراسية (Levels) APIs
+    // ==========================================
+    async getAllLevels() {
+      try {
+        const { url, method } = endpoint.programs.getAllLevels || { url: "api/programs/levels/", method: "GET" };
+        const { data } = await requestData(url, method);
+        if (data) {
+          this.levels = Array.isArray(data) ? data : (data.results || []);
+        }
+      } catch (err) {
+        console.error("خطأ في جلب المستويات:", err);
+      }
+    },
+
+    async createLevel(payload) {
+      try {
+        const { url, method } = { url: "api/programs/levels/", method: "POST" };
+        const { data } = await requestData(url, method, payload);
+        if (data) { this.levels.push(data); return { success: true }; }
+      } catch (err) { return { success: false }; }
+    },
+
+    async updateLevel(id, payload) {
+      try {
+        const { url, method } = { url: `api/programs/levels/${id}/`, method: "PUT" };
+        const { data } = await requestData(url, method, payload);
+        if (data) { await this.getAllLevels(); return { success: true }; }
+      } catch (err) { return { success: false }; }
+    },
+
+    async deleteLevel(id) {
+      try {
+        const { url, method } = { url: `api/programs/levels/${id}/`, method: "DELETE" };
+        await requestData(url, method);
+        this.levels = this.levels.filter(l => l.id !== id);
+        return { success: true };
+      } catch (err) { return { success: false }; }
+    },
+
+    // ==========================================
+    // 3. أوزان الدرجات (Grade Weights) APIs
+    // ==========================================
+    async getAllGradeWeights() {
+      try {
+        const { url, method } = { url: "api/programs/grade-weights/", method: "GET" };
+        const { data } = await requestData(url, method);
+        if (data) {
+          this.gradeWeights = Array.isArray(data) ? data : (data.results || []);
+        }
+      } catch (err) {
+        console.error("خطأ في جلب أوزان الدرجات:", err);
+      }
+    },
+
+    async createGradeWeight(payload) {
+      try {
+        const { url, method } = { url: "api/programs/grade-weights/", method: "POST" };
+        const { data } = await requestData(url, method, payload);
+        if (data) { this.gradeWeights.push(data); return { success: true }; }
+      } catch (err) { return { success: false }; }
+    },
+
+    async updateGradeWeight(id, payload) {
+      try {
+        const { url, method } = { url: `api/programs/grade-weights/${id}/`, method: "PUT" };
+        const { data } = await requestData(url, method, payload);
+        if (data) { await this.getAllGradeWeights(); return { success: true }; }
+      } catch (err) { return { success: false }; }
+    },
+
+    async deleteGradeWeight(id) {
+      try {
+        const { url, method } = { url: `api/programs/grade-weights/${id}/`, method: "DELETE" };
+        await requestData(url, method);
+        this.gradeWeights = this.gradeWeights.filter(g => g.id !== id);
+        return { success: true };
+      } catch (err) { return { success: false }; }
     }
   }
 });

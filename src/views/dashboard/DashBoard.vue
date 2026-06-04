@@ -3,6 +3,7 @@ import { ref, computed, onMounted, onUnmounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import logoUrl from "/assets/logos/logo.png";
 import { useAuthStore } from "@/stors/acount-store.js";
+import { useProgramStore } from "@/stors/program-stor.js";
 import ConfirmModal from '@/components/confirmAndSucces/ConfirmModal.vue'; 
 
 
@@ -47,9 +48,28 @@ const sidebarMenu = computed(() => {
 
 const bottomNavMenu = computed(() => dashMenu.value.filter((item) => item.isPrimary));
 
-const currentRouteName = computed(
-  () => dashMenu.value.find((m) => route.path === m.path)?.name || "لوحة التحكم",
-);
+// التعديل الذكي لقراءة عنوان الهيدر بناءً على اسم الراوتر وليس المسار الحرفي
+const currentRouteName = computed(() => {
+  // 1. البحث في القائمة بناءً على اسم الراوتر المقابل (nameRouter)
+  const matchedMenu = dashMenu.value?.find((m) => route.name === m.nameRouter);
+  
+  if (matchedMenu) {
+    // 2. إذا كنا داخل صفحة الدفعات، وكان هناك كورس مصفى بالرابط، نغير عنوان الهيدر بالكامل
+    if (route.name === 'SupervisorBatches' && route.params.courseId) {
+      // استخراج اسم المساق التعليمي من الـ Program Store لتجهيز العنوان
+      const programStore = useProgramStore();
+      const match = programStore.programs?.find(p => String(p.id) === String(route.params.courseId));
+      
+      return match ? `دفعات مساق: ${match.name}` : 'إدارة الدفعات التعليمية';
+    }
+    
+    // 3. لأي صفحة أخرى (المستخدمين، التقارير... إلخ) يعود الاسم الطبيعي من المنيو
+    return matchedMenu.name;
+  }
+  
+  // القيمة الاحتياطية الافتراضية
+  return "لوحة التحكم";
+});
 const switchRole=()=>{
    router.push({ name: "ChoseRole" });
 }

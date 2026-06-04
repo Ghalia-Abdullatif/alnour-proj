@@ -232,8 +232,8 @@ const handleCancel = () => {
               v-model="formData.birthDate"
               placeholder="اختر تاريخ الميلاد"
               :required="true"
-              :min-age="12"
-              :max-age="20"
+              :min-age="1"
+              :max-age="50"
               :localerror="!!errors.birthDate"
               @error="
                 (e) => {

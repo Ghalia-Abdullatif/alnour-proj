@@ -417,7 +417,7 @@ const routes = [
         meta: { roles: ['super_admin', 'batch_supervisor', 'group_supervisor', 'admin'] },
         children: [
           {
-            path: 'courses/batches',
+            path: 'courses/:courseId?/batches',
             name: 'SupervisorBatches',
             component: () => import('../views/dashboard/supervisor/ViewBatches.vue'),
             props: true
@@ -518,4 +518,4 @@ const router = createRouter({
 //   next();
 // });
 
-// export default router
+export default router

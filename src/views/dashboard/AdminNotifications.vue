@@ -72,7 +72,7 @@
       </div>
 
       <!-- مؤشر التحميل والتغذية الراجعة (Feedback Loading) -->
-      <div v-if="isLoading" class="p-12 text-center">
+      <div v-if=" isLoading" class="p-12 text-center">
         <div class="w-10 h-10 border-4 border-[#802c2c] border-t-transparent rounded-full animate-spin mx-auto mb-3"></div>
         <p class="text-xs text-gray-500 font-medium animate-pulse">جاري مزامنة وجلب التنبيهات من الأرشيف...</p>
       </div>
@@ -95,7 +95,7 @@
                   المستهدف: 
                   <span v-if="notif.is_broadcast">|الكل|</span>
                   <span v-else v-for="role in notif.notification_roles" :key="role.role_id">
-                 |{{ role.role_name }} |
+                 {{ role.role_name }}|
                   </span>
                 </span>
               </div>
