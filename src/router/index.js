@@ -343,13 +343,24 @@ const routes = [
         component: () => UsersLog,
         meta: { roles: ['super_admin','batch_supervisor', 'admin'] } 
       },
+      // {
+//   path: '/groups',
+//   name: 'GroupsList',
+//   component: () => import('@/views/GroupsListManager.vue') // شاشة عرض المجموعات الإجمالية
+// },
+// {
+//   path: '/groups/:groupId',
+//   name: 'GroupDetails',
+//   component: () => import('@/views/GroupDetailsManager.vue') // الشاشة الداخلية التي بالأسفل
+// },
+
       // [الصفحة 1]: بناء القوالب والأسئلة (خاص بالأدمن فقط)
-    // {
-    //   path: 'admin/reports/templates',
-    //   name: 'AdminReportTemplates',
-    //   component: AdminReportTemplates,
-    //   meta: { roles: ['super_admin', 'admin'] } // حماية المسار
-    // },
+    {
+      path: 'admin/reports/templates',
+      name: 'AdminReportTemplates',
+      component: AdminReportTemplates,
+      meta: { roles: ['super_admin', 'admin'] } // حماية المسار
+    },
 
     // // [الصفحة 2]: شاشة تعبئة التقارير (خاص بمشرف المجموعة والدفعة)
     // {

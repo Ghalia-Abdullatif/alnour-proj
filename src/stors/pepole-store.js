@@ -321,7 +321,9 @@ getUsersWithRoles(state) {
       //      if (this.$persist) {
       //      this.$persist(); 
       //  }
-          console.log(data, "users from pepole store");
+          console.log(data, "users from pepole store بدون نقاطخخخخخخخخخخخخخخخخخخخخخخخخخخخخخخخخخخخخخ");
+                    console.log(...data, "users from pepole store ............................... نقاطخخخخخخخخخخخخخخخخخخخخخخخخخخخخخخخخخخخخخبب");
+
              this.usersHasAcounts=data;
 
           return { success: true, ...data };

@@ -187,6 +187,10 @@ export const endpoint = {
       url: `${baseurl}accounts/account-roles/`, //    ازالة دور من حساب  مستخدم
       method: "POST",
     },
+     getAllcountryes: {
+      url: `${baseurl}/people/countries/`, // جلب جميع الأدوار المتاحة في النظام (Admin, Teacher, etc)
+      method: "GET",
+    },
     ///accounts/account-roles/:id/  accounts/account-roles/                          "method": "DELETE",
 
     ///accounts/activate/
@@ -269,56 +273,56 @@ export const endpoint = {
   },
   // --- روابط إدارة المجموعات والطلاب التابعين لها (Groups & Group Students) ---
   groups: {
-    // جلب كافة المجموعات أو إنشائها
-    getAllGroups: {
-      url: `${baseurl}groups/`,
-      method: "GET",
-    },
-    createGroup: {
-      url: `${baseurl}groups/`,
-      method: "POST",
-    },
-    // العمليات المعتمدة على معرّف المجموعة المحددة (id)
-    getGroupById: {
-      url: `${baseurl}groups/`, // سيتم إلحاق الـ id/ برمجياً في الـ Store
-      method: "GET",
-    },
-    updateGroup: {
-      url: `${baseurl}groups/`, // سيتم إلحاق الـ id/ برمجياً في الـ Store
-      method: "PUT",
-    },
-    patchGroup: {
-      url: `${baseurl}groups/`, // سيتم إلحاق الـ id/ برمجياً في الـ Store
-      method: "PATCH",
-    },
-    deleteGroup: {
-      url: `${baseurl}groups/`, // سيتم إلحاق الـ id/ برمجياً في الـ Store
-      method: "DELETE",
-    },
-
-    // --- تسكين وإدارة الطالبات داخل المجموعات (Group-Student Assignments) ---
-    getGroupStudents: {
-      url: `${baseurl}groups/group-students/`, // جلب سجلات توزيع الطالبات على المجموعات
-      method: "GET",
-    },
-    addStudentToGroup: {
-      url: `${baseurl}groups/group-students/`, // ربط طالبة بمجموعة محددة
-      method: "POST",
-    },
-    // العمليات التفصيلية على طالبة معينة داخل مجموعة بواسطة معرف السجل (id)
-    getGroupStudentDetail: {
-      url: `${baseurl}groups/group-students/`, // سيتم إلحاق الـ id/ برمجياً
-      method: "GET",
-    },
-    updateGroupStudent: {
-      url: `${baseurl}groups/group-students/`, // سيتم إلحاق الـ id/ برمجياً
-      method: "PUT",
-    },
-    removeStudentFromGroup: {
-      url: `${baseurl}groups/group-students/`, // سيتم إلحاق الـ id/ برمجياً لحذف السجل
-      method: "DELETE",
-    }
+  // جلب كافة المجموعات أو إنشائها
+  getAllGroups: {
+    url: `${baseurl}groups/`,
+    method: "GET",
   },
+  createGroup: {
+    url: `${baseurl}groups/`,
+    method: "POST",
+  },
+  // العمليات المعتمدة على معرّف المجموعة المحددة (id)
+  getGroupById: {
+    url: `${baseurl}groups/`, // سيتم إلحاق الـ id/ برمجياً في الـ Store
+    method: "GET",
+  },
+  updateGroup: {
+    url: `${baseurl}groups/`, // سيتم إلحاق الـ id/ برمجياً في الـ Store
+    method: "PUT",
+  },
+  patchGroup: {
+    url: `${baseurl}groups/`, // سيتم إلحاق الـ id/ برمجياً في الـ Store
+    method: "PATCH",
+  },
+  deleteGroup: {
+    url: `${baseurl}groups/`, // سيتم إلحاق الـ id/ برمجياً في الـ Store
+    method: "DELETE",
+  },
+
+  // 🛠️ التعديل الصحيح هنا: يجب أن تشير إلى مسار الـ group-students العام لإمكانية فلترته
+  getGroupStudents: {
+    url: `${baseurl}groups/group-students/`, 
+    method: "GET",
+  },
+  addStudentToGroup: {
+    url: `${baseurl}groups/group-students/`, 
+    method: "POST",
+  },
+  getGroupStudentDetail: {
+    url: `${baseurl}groups/group-students/`, 
+    method: "GET",
+  },
+  updateGroupStudent: {
+    url: `${baseurl}groups/group-students/`, 
+    method: "PUT",
+  },
+  removeStudentFromGroup: {
+    url: `${baseurl}groups/group-students/`, 
+    method: "DELETE",   
+  }
+}
+,
   // --- روابط نظام التقارير الديناميكي وسير العمل (Dynamic Reports Workflow) ---
   reports: {
     // ========================================================

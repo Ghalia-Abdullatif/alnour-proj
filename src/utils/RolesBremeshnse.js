@@ -354,7 +354,12 @@ export const GroupSuperVisorpremion = [
   { id: "MangeBatches", isPrimary: true },
   { id: "MangeCourses", isPrimary: true },
   { id: "MangeRegistration", isPrimary: true },
+
 ];
+export const batch_supervisor=[
+    { id: "MangeBatches", isPrimary: true },
+
+]
 
 /**
  * @function getMenuByRole
@@ -369,7 +374,7 @@ export const getMenuByRole = (roleId) => {
   const rolePermissionsMap = {
     'super_admin': Adminpremion,
     'group_supervisor': GroupSuperVisorpremion,
-    'batch_supervisor': [], // مصفوفة صلاحيات مشرفة الدفعة (يمكن إضافتها لاحقاً)
+    'batch_supervisor': batch_supervisor, // مصفوفة صلاحيات مشرفة الدفعة (يمكن إضافتها لاحقاً)
     'teacher': [],          // مصفوفة صلاحيات المعلمة (يمكن إضافتها لاحقاً)
     'student': []           // مصفوفة صلاحيات الطالبة (يمكن إضافتها لاحقاً)
   };

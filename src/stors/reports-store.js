@@ -52,6 +52,7 @@ export const useReportsStore = defineStore("reports", {
       try {
         const { url, method } = endpoint.reports.getAllTemplates;
         const { data, error } = await requestData(url, method);
+
         if (data) { this.templates = data; return { success: true, data }; }
         return { success: false, message: error };
       } catch (err) { return { success: false, message: "فشل جلب القوالب." }; }

@@ -162,7 +162,7 @@ import { ref, onMounted, reactive } from 'vue';
 import GenericAdminLayout from '@/views/dashboard/admin/GenericAdminLayout.vue';
 import SuccessToast from '@/components/confirmAndSucces/SuccessToast.vue';
 import { useReportsStore } from '@/stors/reports-store.js';
-import { useGroupsStore } from '@/stors/groups-store.js';
+import { useGroupStore } from "@/stors/groups-store.js";
 
 const reportsStore = useReportsStore();
 const groupsStore = useGroupsStore();
@@ -181,6 +181,7 @@ const formAssign = ref({ group: '', report_date: '' });
 onMounted(async () => {
   await reportsStore.getReportsStoreData();
   await groupsStore.getAllGroups();
+  console.log(groupsStore.groups);
 });
 
 const openCreateTemplateModal = () => {

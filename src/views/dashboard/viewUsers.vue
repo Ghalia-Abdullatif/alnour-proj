@@ -20,14 +20,14 @@
           <div class="icon-box"><i class="fa fa-users"></i></div>
           <div>
             <p class="stat-label">إجمالي الأعضاء</p>
-            <p class="stat-value">{{ pepoleStore.getUsersWithRoles.length }} عضو</p>
+            <p class="stat-value">{{ filteredUsers.length }} عضو</p>
           </div>
         </div>
         <div class="stat-card">
           <div class="icon-box"><i class="fa fa-shield"></i></div>
           <div>
             <p class="stat-label">أصحاب الحسابات</p>
-            <p class="stat-value">{{ pepoleStore.usersHasAcounts.length }} حساب نشط</p>
+            <p class="stat-value">{{ activAcountCount }} حساب نشط</p>
           </div>
         </div>
       </div>
@@ -240,13 +240,16 @@ const isRoleModalOpen = ref(false);
 const isConfirmOpen = ref(false);
 const isToastVisible = ref(false);
 
+
 const modalMode = ref('create');       
 const personModalMode = ref('create'); 
 const selectedUser = ref(null);        
 const toastMsg = ref('');  
 
 const searchKeyword = ref('');         
-const currentTab = ref('all');         
+const currentTab = ref('all');
+
+
 
 // تم تحديث التاب وإضافة الأدوار المطلوبة: 'group_supervisor' و 'batch_supervisor'
 const roleTabs = [                     
@@ -289,6 +292,11 @@ const refreshData = async () => {
     isLoading.value = false;
   }
 };
+const activAcountCount = computed(() => {
+  return filteredUsers.value.filter(user => 
+    user.accountDetails && user.accountDetails.id && user.accountDetails.is_active === 'نشط'
+  ).length;
+});
 
 const filteredUsers = computed(() => {
   const allUsersList = pepoleStore.getUsersWithRoles || [];
